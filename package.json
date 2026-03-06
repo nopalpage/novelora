@@ -1,0 +1,19 @@
+{
+  "name": "novelora",
+  "version": "2.0.0",
+  "private": true,
+  "scripts": {
+    "dev":      "cd frontend && vite",
+    "build":    "cd frontend && vite build",
+    "preview":  "cd frontend && vite preview",
+    "deploy":   "cd frontend && vite build && cd .. && wrangler pages deploy ./dist",
+    "wasm":     "cd go-wasm && make tiny"
+  },
+  "devDependencies": {
+    "wrangler": "^3.78.0"
+  },
+  "dependencies": {
+    "hono": "^4.0.0",
+    "@supabase/supabase-js": "^2.0.0"
+  }
+}

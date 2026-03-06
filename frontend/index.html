@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Novelora — Web novels from Indonesia, Japan, Korea, and beyond." />
+  <meta name="theme-color" content="#faf8f4" />
+  <meta property="og:title" content="Novelora — Read the World" />
+  <meta property="og:type" content="website" />
+  <title>Novelora</title>
+  <style>
+    /* Critical CSS — prevents FOUC */
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{background:#faf8f4;color:#191917;font-family:'Outfit',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+    #app{min-height:100vh}
+    .init-bar{height:60px;border-bottom:1px solid #e4e0d4;display:flex;align-items:center;padding:0 24px;gap:12px;background:#faf8f4}
+    .skel-bar{height:20px;border-radius:4px;background:linear-gradient(90deg,#f0ece2 25%,#e8e4d8 50%,#f0ece2 75%);background-size:200% 100%;animation:sk 1.4s infinite}
+    @keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="init-bar">
+      <div class="skel-bar" style="width:130px"></div>
+      <div style="flex:1"></div>
+      <div class="skel-bar" style="width:150px;height:34px"></div>
+      <div class="skel-bar" style="width:70px;height:34px"></div>
+      <div class="skel-bar" style="width:80px;height:34px"></div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
