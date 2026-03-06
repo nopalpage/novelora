@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD
   "name": "novelora",
-=======
-  "name": "novelnest",
->>>>>>> bb63f203f9f6ba2fcfda878a8fe7f55974e94c48
   "version": "2.0.0",
   "private": true,
   "scripts": {
