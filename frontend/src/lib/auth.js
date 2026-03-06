@@ -7,16 +7,16 @@ import { sb } from './supabase.js'
 const _listeners = new Set()
 let _state = { user: null, session: null, profile: null, role: null, loading: true }
 
-export function getAuth()       { return { ..._state } }
-export function getUser()       { return _state.user }
-export function getRole()       { return _state.role }
-export function isAdmin()       { return _state.role === 'admin' }
-export function isAuthor()      { return _state.role === 'author' || isAdmin() }
-export function isLoggedIn()    { return !!_state.user }
+export function getAuth()    { return { ..._state } }
+export function getUser()    { return _state.user }
+export function getRole()    { return _state.role }
+export function isAdmin()    { return _state.role === 'admin' }
+export function isAuthor()   { return _state.role === 'author' || isAdmin() }
+export function isLoggedIn() { return !!_state.user }
 
 export function onAuthChange(fn) {
   _listeners.add(fn)
-  fn({ ..._state })           // immediate call
+  fn({ ..._state })
   return () => _listeners.delete(fn)
 }
 
@@ -57,6 +57,7 @@ async function _loadProfile(session) {
 }
 
 /* ─── Auth actions ─── */
+
 export async function signIn(email, password) {
   if (!sb) throw new Error('Supabase not configured')
   const { error } = await sb.auth.signInWithPassword({ email, password })
@@ -65,11 +66,53 @@ export async function signIn(email, password) {
 
 export async function signUp(email, password, username) {
   if (!sb) throw new Error('Supabase not configured')
-  const { error } = await sb.auth.signUp({
-    email, password,
-    options: { data: { username } },
+  const { data, error } = await sb.auth.signUp({
+    email,
+    password,
+    options: {
+      data: { username },
+      emailRedirectTo: undefined, // kita handle verifikasi sendiri
+    },
   })
   if (error) throw error
+  return data
+}
+
+export async function signInWithGoogle() {
+  if (!sb) throw new Error('Supabase not configured')
+  const { error } = await sb.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: `${window.location.origin}/`,
+      queryParams: {
+        access_type: 'offline',
+        prompt: 'consent',
+      },
+    },
+  })
+  if (error) throw error
+}
+
+export async function sendVerificationCode(email) {
+  const res = await fetch('/api/auth/send-verification', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email }),
+  })
+  const json = await res.json()
+  if (!json.ok) throw new Error(json.message || 'Gagal mengirim kode')
+  return json.data
+}
+
+export async function verifyCode(email, code) {
+  const res = await fetch('/api/auth/verify-code', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, code }),
+  })
+  const json = await res.json()
+  if (!json.ok) throw new Error(json.message || 'Kode tidak valid')
+  return json.data
 }
 
 export async function signOut() {
