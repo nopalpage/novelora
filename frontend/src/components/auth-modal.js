@@ -29,7 +29,11 @@ function _html() {
             <rect x="15.5" y="8.5" width="1" height="12" rx=".5" fill="#f5e0b8"/>
             <path d="M6 23 Q16 18.5 26 23" stroke="#c9a060" stroke-width="1.4" fill="none" stroke-linecap="round"/>
           </svg>
+<<<<<<< HEAD
           <span class="modal-title">Novelora</span>
+=======
+          <span class="modal-title">NovelNest</span>
+>>>>>>> bb63f203f9f6ba2fcfda878a8fe7f55974e94c48
         </div>
         <button class="btn btn-icon btn-ghost text-ink-3" id="auth-close">✕</button>
       </div>
@@ -213,7 +217,11 @@ function _bind(defaultTab) {
     try {
       await verifyCode(email, code)
       _close()
+<<<<<<< HEAD
       toastSuccess('Email terverifikasi! Selamat datang di Novelora 🎉')
+=======
+      toastSuccess('Email terverifikasi! Selamat datang di NovelNest 🎉')
+>>>>>>> bb63f203f9f6ba2fcfda878a8fe7f55974e94c48
     } catch(err) {
       toastError(err.message)
       document.getElementById('v-code').value = ''

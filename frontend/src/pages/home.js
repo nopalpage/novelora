@@ -197,7 +197,11 @@ function _html() {
       <div class="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-6">
         <div>
           <h2 class="font-serif text-[30px] font-bold text-paper tracking-tight mb-2">Share your story<br>with the world</h2>
+<<<<<<< HEAD
           <p class="text-[14.5px] text-paper/50 max-w-md leading-relaxed">Novelora is free for all writers. Reach readers in Indonesia, Japan, the US, and beyond.</p>
+=======
+          <p class="text-[14.5px] text-paper/50 max-w-md leading-relaxed">NovelNest is free for all writers. Reach readers in Indonesia, Japan, the US, and beyond.</p>
+>>>>>>> bb63f203f9f6ba2fcfda878a8fe7f55974e94c48
         </div>
         <div class="flex gap-3 shrink-0">
           <button class="btn btn-xl bg-paper text-ink hover:bg-accent hover:text-white transition-colors" id="cta-join-btn">Create account</button>

@@ -20,7 +20,11 @@ async function boot() {
   await initAuth()
 
   // Load WASM non-blocking
+<<<<<<< HEAD
   initWasm('/wasm/novelora.wasm').catch(() => {})
+=======
+  initWasm('/wasm/novelnest.wasm').catch(() => {})
+>>>>>>> bb63f203f9f6ba2fcfda878a8fe7f55974e94c48
 
   // Register routes
   addRoute('/',               () => import('./pages/home.js').then(m => m.render()))

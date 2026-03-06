@@ -32,7 +32,11 @@ function _html() {
   <div class="container mx-auto px-6 py-10 max-w-4xl">
     <div class="mb-8">
       <h1 class="text-[28px] font-bold font-serif tracking-tight mb-1">Rankings</h1>
+<<<<<<< HEAD
       <p class="text-[14px] text-ink-3">Most-read novels on Novelora</p>
+=======
+      <p class="text-[14px] text-ink-3">Most-read novels on NovelNest</p>
+>>>>>>> bb63f203f9f6ba2fcfda878a8fe7f55974e94c48
     </div>
 
     <div id="ad-banner-rankings" class="mb-6"></div>

@@ -240,6 +240,10 @@ function _fmtNum(n) {
 const MOCK_ADS = [
   { id:'1', title:'Bookwalker — Global Novel Store', slot:'banner',  active:true,  advertiser:'Bookwalker',  url:'https://bookwalker.jp', description:'Buy LN, manga & webtoons', cta:'Shop Now',   impressions:45200, clicks:904  },
   { id:'2', title:'NovelAI — Write with AI',         slot:'sidebar', active:true,  advertiser:'NovelAI',     url:'https://novelai.net',   description:'AI writing assistant',     cta:'Try Free',   impressions:28100, clicks:1124 },
+<<<<<<< HEAD
   { id:'3', title:'Premium — Go Ad-Free',            slot:'inline',  active:true,  advertiser:'Novelora',   url:'/premium',              description:'Unlock premium features',  cta:'Upgrade',    impressions:87400, clicks:1748 },
+=======
+  { id:'3', title:'Premium — Go Ad-Free',            slot:'inline',  active:true,  advertiser:'NovelNest',   url:'/premium',              description:'Unlock premium features',  cta:'Upgrade',    impressions:87400, clicks:1748 },
+>>>>>>> bb63f203f9f6ba2fcfda878a8fe7f55974e94c48
   { id:'4', title:'Anime Corner — Vol. 18',          slot:'banner',  active:false, advertiser:'Anime Corner',url:'https://animecorner.me', description:'Latest anime news',        cta:'Read More',  impressions:12000, clicks:180  },
 ]

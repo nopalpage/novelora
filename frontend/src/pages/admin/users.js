@@ -184,7 +184,11 @@ function _fmtDate(d) {
 }
 
 const MOCK_USERS = [
+<<<<<<< HEAD
   { id:'1', username:'admin',          email:'admin@novelora.my.id',    role:'admin',  is_banned:false, created_at:'2024-01-01' },
+=======
+  { id:'1', username:'admin',          email:'admin@novelnest.io',    role:'admin',  is_banned:false, created_at:'2024-01-01' },
+>>>>>>> bb63f203f9f6ba2fcfda878a8fe7f55974e94c48
   { id:'2', username:'AriannaKusuma',  email:'ariana@example.com',    role:'author', is_banned:false, created_at:'2024-02-15' },
   { id:'3', username:'yamazaki_ren',   email:'ren@example.jp',        role:'author', is_banned:false, created_at:'2024-03-01' },
   { id:'4', username:'tanaka_reader',  email:'tanaka@example.jp',     role:'reader', is_banned:false, created_at:'2024-04-12' },
