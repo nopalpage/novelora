@@ -18,38 +18,23 @@ function _loadScript(src) {
   })
 }
 
-export const searchScore = (q, t, d='') =>
-<<<<<<< HEAD
+export const searchScore = (q, t, d = '') =>
   _ready && globalThis.NoveloraWasm?.searchScore
     ? globalThis.NoveloraWasm.searchScore(q, t, d)
     : _jsSearch(q, t, d)
 
-export const rankScore = (v, l, r, a=0) =>
+export const rankScore = (v, l, r, a = 0) =>
   _ready && globalThis.NoveloraWasm?.rankScore
     ? globalThis.NoveloraWasm.rankScore(v, l, r, a)
-    : (Math.log1p(v)/Math.log1p(1e7)*0.4 + Math.log1p(l)/Math.log1p(5e5)*0.3 + (r-1)/4*0.3) / (1+a/720)
+    : (Math.log1p(v) / Math.log1p(1e7) * 0.4 + Math.log1p(l) / Math.log1p(5e5) * 0.3 + (r - 1) / 4 * 0.3) / (1 + a / 720)
 
 export const readingTime = (wc) =>
   _ready && globalThis.NoveloraWasm?.readingTime
     ? globalThis.NoveloraWasm.readingTime(wc)
-=======
-  _ready && globalThis.NovelNestWasm?.searchScore
-    ? globalThis.NovelNestWasm.searchScore(q, t, d)
-    : _jsSearch(q, t, d)
-
-export const rankScore = (v, l, r, a=0) =>
-  _ready && globalThis.NovelNestWasm?.rankScore
-    ? globalThis.NovelNestWasm.rankScore(v, l, r, a)
-    : (Math.log1p(v)/Math.log1p(1e7)*0.4 + Math.log1p(l)/Math.log1p(5e5)*0.3 + (r-1)/4*0.3) / (1+a/720)
-
-export const readingTime = (wc) =>
-  _ready && globalThis.NovelNestWasm?.readingTime
-    ? globalThis.NovelNestWasm.readingTime(wc)
->>>>>>> bb63f203f9f6ba2fcfda878a8fe7f55974e94c48
     : Math.ceil(wc / 250)
 
 function _jsSearch(q, title, desc) {
   const words = q.toLowerCase().split(/\s+/)
-  const text  = (title+' '+desc).toLowerCase()
+  const text = (title + ' ' + desc).toLowerCase()
   return words.filter(w => text.includes(w)).length / Math.max(words.length, 1)
 }
