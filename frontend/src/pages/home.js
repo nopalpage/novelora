@@ -2,16 +2,16 @@
  * Homepage — realtime view counts, ranking updates, latest chapters
  */
 import { sb, subscribe } from '../lib/supabase.js'
-import { api }           from '../lib/api.js'
+import { api } from '../lib/api.js'
 import { isLoggedIn, getAuth } from '../lib/auth.js'
 import { renderBannerAd, renderSidebarAd } from '../components/ads.js'
-import { rankScore }     from '../lib/wasm.js'
+import { rankScore } from '../lib/wasm.js'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 dayjs.extend(relativeTime)
 
-const COVERS = ['cover-1','cover-2','cover-3','cover-4','cover-5','cover-6','cover-7','cover-8','cover-9','cover-10']
-const STRIPE  = `repeating-linear-gradient(-45deg,transparent,transparent 8px,rgba(255,255,255,.04) 8px,rgba(255,255,255,.04) 9px)`
+const COVERS = ['cover-1', 'cover-2', 'cover-3', 'cover-4', 'cover-5', 'cover-6', 'cover-7', 'cover-8', 'cover-9', 'cover-10']
+const STRIPE = `repeating-linear-gradient(-45deg,transparent,transparent 8px,rgba(255,255,255,.04) 8px,rgba(255,255,255,.04) 9px)`
 
 let _unsubs = []
 let _novels = MOCK_NOVELS
@@ -25,7 +25,7 @@ export async function render() {
   // Load data
   const [novelsRes, chaptersRes] = await Promise.allSettled([
     api.novels.list({ limit: 12, sort: 'popular' }),
-    api.chapters ? fetch('/api/chapters/latest').then(r=>r.json()).catch(()=>null) : null,
+    api.chapters ? fetch('/api/chapters/latest').then(r => r.json()).catch(() => null) : null,
   ])
 
   if (novelsRes.status === 'fulfilled' && novelsRes.value?.data) {
@@ -96,7 +96,7 @@ function _html() {
           </div>
           <!-- Stats -->
           <div class="flex gap-7 mt-10 pt-8 border-t border-line">
-            ${[['12,400','Novels'],['84K+','Chapters'],['320K','Readers'],['6','Languages']].map(([v,l]) => `
+            ${[['12,400', 'Novels'], ['84K+', 'Chapters'], ['320K', 'Readers'], ['6', 'Languages']].map(([v, l]) => `
               <div>
                 <div class="font-serif text-[24px] font-bold tracking-tight">${v}</div>
                 <div class="text-[11.5px] text-ink-3 font-medium mt-0.5">${l}</div>
@@ -131,12 +131,12 @@ function _html() {
 
       <!-- Origin filter -->
       <div class="flex gap-1.5 mb-6 overflow-x-auto scrollbar-hide pb-1" id="origin-filter">
-        ${['all','id','jp','us','kr','cn'].map((o,i) => {
-          const labels = ['All','🇮🇩 Indonesia','🇯🇵 Japan','🇺🇸 USA','🇰🇷 Korea','🇨🇳 China']
-          return `<button class="shrink-0 flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[12.5px] font-medium border transition-all
-            ${i===0 ? 'bg-ink text-paper border-ink' : 'bg-transparent border-line text-ink-2 hover:border-ink-3'}"
+        ${['all', 'id', 'jp', 'us', 'kr', 'cn'].map((o, i) => {
+    const labels = ['All', '🇮🇩 Indonesia', '🇯🇵 Japan', '🇺🇸 USA', '🇰🇷 Korea', '🇨🇳 China']
+    return `<button class="shrink-0 flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[12.5px] font-medium border transition-all
+            ${i === 0 ? 'bg-ink text-paper border-ink' : 'bg-transparent border-line text-ink-2 hover:border-ink-3'}"
             data-origin="${o}">${labels[i]}</button>`
-        }).join('')}
+  }).join('')}
       </div>
 
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 gap-y-6" id="novel-grid"></div>
@@ -197,11 +197,7 @@ function _html() {
       <div class="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-6">
         <div>
           <h2 class="font-serif text-[30px] font-bold text-paper tracking-tight mb-2">Share your story<br>with the world</h2>
-<<<<<<< HEAD
           <p class="text-[14.5px] text-paper/50 max-w-md leading-relaxed">Novelora is free for all writers. Reach readers in Indonesia, Japan, the US, and beyond.</p>
-=======
-          <p class="text-[14.5px] text-paper/50 max-w-md leading-relaxed">NovelNest is free for all writers. Reach readers in Indonesia, Japan, the US, and beyond.</p>
->>>>>>> bb63f203f9f6ba2fcfda878a8fe7f55974e94c48
         </div>
         <div class="flex gap-3 shrink-0">
           <button class="btn btn-xl bg-paper text-ink hover:bg-accent hover:text-white transition-colors" id="cta-join-btn">Create account</button>
@@ -253,7 +249,7 @@ function _renderGrid(list, origin = 'all') {
 
 function _novelCard(n, i) {
   const c = COVERS[i % COVERS.length]
-  const statusDot = { ongoing:'bg-green-500', completed:'bg-blue-400', hiatus:'bg-yellow-400' }
+  const statusDot = { ongoing: 'bg-green-500', completed: 'bg-blue-400', hiatus: 'bg-yellow-400' }
   return `
   <a href="/novel/${n.id}" data-link class="group cursor-pointer" data-novel-card="${n.id}">
     <div class="book-cover bg-${c} w-full mb-2">
@@ -262,14 +258,14 @@ function _novelCard(n, i) {
         <div class="absolute inset-0" style="background-image:${STRIPE}"></div>
         <span class="book-text">${n.title}</span>
       </div>
-      <div class="absolute top-2 right-2 w-2 h-2 rounded-full ${statusDot[n.status||'ongoing'] || 'bg-green-500'}"></div>
+      <div class="absolute top-2 right-2 w-2 h-2 rounded-full ${statusDot[n.status || 'ongoing'] || 'bg-green-500'}"></div>
     </div>
     <div class="px-0.5">
       <div class="text-[13px] font-semibold text-ink leading-snug line-clamp-2 mb-1">${n.title}</div>
-      <div class="text-[11.5px] text-ink-3 mb-1">${n.flag||''} ${n.author_name||n.author||''}</div>
+      <div class="text-[11.5px] text-ink-3 mb-1">${n.flag || ''} ${n.author_name || n.author || ''}</div>
       <div class="flex items-center gap-2 text-[11.5px]">
-        <span class="text-ink-2 flex items-center gap-0.5"><span class="text-yellow-500">★</span> ${n.avg_rating||n.rating||'4.5'}</span>
-        <span class="text-ink-4">${n.chapter_count||n.chapters||0} ch</span>
+        <span class="text-ink-2 flex items-center gap-0.5"><span class="text-yellow-500">★</span> ${n.avg_rating || n.rating || '4.5'}</span>
+        <span class="text-ink-4">${n.chapter_count || n.chapters || 0} ch</span>
       </div>
     </div>
   </a>`
@@ -288,7 +284,7 @@ function _renderChapters(list) {
   if (!el) return
   el.innerHTML = list.map(c => `
     <div class="flex items-center gap-3 py-3 cursor-pointer hover:opacity-75 transition-opacity">
-      <div class="w-[34px] h-[48px] rounded-[3px] bg-${c.color||'cover-1'} relative overflow-hidden shrink-0">
+      <div class="w-[34px] h-[48px] rounded-[3px] bg-${c.color || 'cover-1'} relative overflow-hidden shrink-0">
         <div class="absolute left-0 top-0 bottom-0 w-[3px] bg-black/20"></div>
       </div>
       <div class="flex-1 min-w-0">
@@ -306,11 +302,11 @@ function _renderChapters(list) {
 function _renderRanks(list) {
   const el = document.getElementById('rank-list')
   if (!el) return
-  const numCls = ['text-yellow-500','text-slate-400','text-orange-400','text-ink-4','text-ink-4','text-ink-4','text-ink-4']
+  const numCls = ['text-yellow-500', 'text-slate-400', 'text-orange-400', 'text-ink-4', 'text-ink-4', 'text-ink-4', 'text-ink-4']
   el.innerHTML = list.map((r, i) => `
     <a href="/novel/${r.id}" data-link class="flex items-center gap-2.5 py-2.5 hover:opacity-75 transition-opacity cursor-pointer">
-      <span class="font-serif text-[18px] font-bold w-5 text-center shrink-0 ${numCls[i]||'text-ink-4'}">${i+1}</span>
-      <div class="w-[30px] h-[42px] rounded-sm bg-${r.color||'cover-1'} relative overflow-hidden shrink-0">
+      <span class="font-serif text-[18px] font-bold w-5 text-center shrink-0 ${numCls[i] || 'text-ink-4'}">${i + 1}</span>
+      <div class="w-[30px] h-[42px] rounded-sm bg-${r.color || 'cover-1'} relative overflow-hidden shrink-0">
         <div class="absolute left-0 top-0 bottom-0 w-[3px] bg-black/20"></div>
       </div>
       <div class="flex-1 min-w-0">
@@ -328,12 +324,12 @@ function _bindEvents() {
     if (!btn) return
     document.querySelectorAll('#origin-filter [data-origin]').forEach(b => {
       b.className = b.className
-        .replace('bg-ink text-paper border-ink','')
-        .replace('bg-transparent border-line text-ink-2','') + ''
-      b.classList.add('bg-transparent','border-line','text-ink-2')
+        .replace('bg-ink text-paper border-ink', '')
+        .replace('bg-transparent border-line text-ink-2', '') + ''
+      b.classList.add('bg-transparent', 'border-line', 'text-ink-2')
     })
-    btn.classList.remove('bg-transparent','border-line','text-ink-2')
-    btn.classList.add('bg-ink','text-paper','border-ink')
+    btn.classList.remove('bg-transparent', 'border-line', 'text-ink-2')
+    btn.classList.add('bg-ink', 'text-paper', 'border-ink')
     _renderGrid(_allNovels, btn.dataset.origin)
   })
 
@@ -372,43 +368,43 @@ function _skeleton() {
 
 /* ── Mock Data ── */
 const MOCK_NOVELS = [
-  { id:'1', title:'Sang Raja yang Dilupakan',    author_name:'Ariana Kusuma',  origin:'id', flag:'🇮🇩', status:'ongoing',   avg_rating:4.8, chapter_count:142, color:'c6' },
-  { id:'2', title:'異世界転生の英雄譚',           author_name:'YamazakiRen',   origin:'jp', flag:'🇯🇵', status:'ongoing',   avg_rating:4.9, chapter_count:387, color:'c1' },
-  { id:'3', title:'The Last Dungeon Crawler',    author_name:'MarcusWilde',   origin:'us', flag:'🇺🇸', status:'ongoing',   avg_rating:4.7, chapter_count:204, color:'c2' },
-  { id:'4', title:'Dewa Pedang Tak Terkalahkan', author_name:'Bagas Saputra', origin:'id', flag:'🇮🇩', status:'completed', avg_rating:4.6, chapter_count:510, color:'c3' },
-  { id:'5', title:'마법사의 두 번째 삶',          author_name:'LeeJiHoon',     origin:'kr', flag:'🇰🇷', status:'ongoing',   avg_rating:4.8, chapter_count:89,  color:'c5' },
-  { id:'6', title:'Stars Beyond the Veil',       author_name:'ElenaCarr',     origin:'us', flag:'🇺🇸', status:'hiatus',    avg_rating:4.5, chapter_count:67,  color:'c8' },
-  { id:'7', title:'Cinta di Antara Dua Dunia',   author_name:'Nadia Rahma',   origin:'id', flag:'🇮🇩', status:'ongoing',   avg_rating:4.7, chapter_count:223, color:'c5' },
-  { id:'8', title:'仙道修真录',                  author_name:'CloudMtn',      origin:'cn', flag:'🇨🇳', status:'ongoing',   avg_rating:4.6, chapter_count:1240,color:'c3' },
-  { id:'9', title:'Whispers in the Dark Forest', author_name:'TobiasNight',   origin:'us', flag:'🇺🇸', status:'ongoing',   avg_rating:4.4, chapter_count:155, color:'c4' },
-  { id:'10',title:'Musim Gugur Sang Penyihir',   author_name:'Dewi Anggraini',origin:'id', flag:'🇮🇩', status:'completed', avg_rating:4.9, chapter_count:320, color:'c9' },
-  { id:'11',title:'The Demon King\'s Daughter',  author_name:'SakuraMoon',    origin:'jp', flag:'🇯🇵', status:'ongoing',   avg_rating:4.7, chapter_count:178, color:'c1' },
-  { id:'12',title:'Rantai Abadi',                author_name:'Rizky Halim',   origin:'id', flag:'🇮🇩', status:'ongoing',   avg_rating:4.5, chapter_count:95,  color:'c7' },
+  { id: '1', title: 'Sang Raja yang Dilupakan', author_name: 'Ariana Kusuma', origin: 'id', flag: '🇮🇩', status: 'ongoing', avg_rating: 4.8, chapter_count: 142, color: 'c6' },
+  { id: '2', title: '異世界転生の英雄譚', author_name: 'YamazakiRen', origin: 'jp', flag: '🇯🇵', status: 'ongoing', avg_rating: 4.9, chapter_count: 387, color: 'c1' },
+  { id: '3', title: 'The Last Dungeon Crawler', author_name: 'MarcusWilde', origin: 'us', flag: '🇺🇸', status: 'ongoing', avg_rating: 4.7, chapter_count: 204, color: 'c2' },
+  { id: '4', title: 'Dewa Pedang Tak Terkalahkan', author_name: 'Bagas Saputra', origin: 'id', flag: '🇮🇩', status: 'completed', avg_rating: 4.6, chapter_count: 510, color: 'c3' },
+  { id: '5', title: '마법사의 두 번째 삶', author_name: 'LeeJiHoon', origin: 'kr', flag: '🇰🇷', status: 'ongoing', avg_rating: 4.8, chapter_count: 89, color: 'c5' },
+  { id: '6', title: 'Stars Beyond the Veil', author_name: 'ElenaCarr', origin: 'us', flag: '🇺🇸', status: 'hiatus', avg_rating: 4.5, chapter_count: 67, color: 'c8' },
+  { id: '7', title: 'Cinta di Antara Dua Dunia', author_name: 'Nadia Rahma', origin: 'id', flag: '🇮🇩', status: 'ongoing', avg_rating: 4.7, chapter_count: 223, color: 'c5' },
+  { id: '8', title: '仙道修真录', author_name: 'CloudMtn', origin: 'cn', flag: '🇨🇳', status: 'ongoing', avg_rating: 4.6, chapter_count: 1240, color: 'c3' },
+  { id: '9', title: 'Whispers in the Dark Forest', author_name: 'TobiasNight', origin: 'us', flag: '🇺🇸', status: 'ongoing', avg_rating: 4.4, chapter_count: 155, color: 'c4' },
+  { id: '10', title: 'Musim Gugur Sang Penyihir', author_name: 'Dewi Anggraini', origin: 'id', flag: '🇮🇩', status: 'completed', avg_rating: 4.9, chapter_count: 320, color: 'c9' },
+  { id: '11', title: 'The Demon King\'s Daughter', author_name: 'SakuraMoon', origin: 'jp', flag: '🇯🇵', status: 'ongoing', avg_rating: 4.7, chapter_count: 178, color: 'c1' },
+  { id: '12', title: 'Rantai Abadi', author_name: 'Rizky Halim', origin: 'id', flag: '🇮🇩', status: 'ongoing', avg_rating: 4.5, chapter_count: 95, color: 'c7' },
 ]
 const MOCK_CHAPTERS = [
-  { novelTitle:'Sang Raja yang Dilupakan',  num:142,  title:'Kebangkitan Raja Bayangan',  color:'cover-6', ago:'12m ago' },
-  { novelTitle:'異世界転生の英雄譚',         num:387,  title:'英雄の真の力',               color:'cover-1', ago:'28m ago' },
-  { novelTitle:'The Last Dungeon Crawler',  num:204,  title:'The Final Floor Revealed',   color:'cover-2', ago:'1h ago'  },
-  { novelTitle:'Cinta di Antara Dua Dunia', num:223,  title:'Pertemuan Terakhir',          color:'cover-5', ago:'2h ago'  },
-  { novelTitle:'마법사의 두 번째 삶',        num:89,   title:'마지막 선택',                 color:'cover-5', ago:'3h ago'  },
-  { novelTitle:'仙道修真录',                num:1240, title:'天道归一',                    color:'cover-3', ago:'4h ago'  },
-  { novelTitle:'Musim Gugur Sang Penyihir', num:320,  title:'Akhir dari Segalanya',        color:'cover-9', ago:'5h ago'  },
+  { novelTitle: 'Sang Raja yang Dilupakan', num: 142, title: 'Kebangkitan Raja Bayangan', color: 'cover-6', ago: '12m ago' },
+  { novelTitle: '異世界転生の英雄譚', num: 387, title: '英雄の真の力', color: 'cover-1', ago: '28m ago' },
+  { novelTitle: 'The Last Dungeon Crawler', num: 204, title: 'The Final Floor Revealed', color: 'cover-2', ago: '1h ago' },
+  { novelTitle: 'Cinta di Antara Dua Dunia', num: 223, title: 'Pertemuan Terakhir', color: 'cover-5', ago: '2h ago' },
+  { novelTitle: '마법사의 두 번째 삶', num: 89, title: '마지막 선택', color: 'cover-5', ago: '3h ago' },
+  { novelTitle: '仙道修真录', num: 1240, title: '天道归一', color: 'cover-3', ago: '4h ago' },
+  { novelTitle: 'Musim Gugur Sang Penyihir', num: 320, title: 'Akhir dari Segalanya', color: 'cover-9', ago: '5h ago' },
 ]
 const MOCK_RANKS = [
-  { id:'8',  title:'仙道修真录',                  author:'CloudMtn',       color:'cover-3', views:'5.1M' },
-  { id:'10', title:'Musim Gugur Sang Penyihir',   author:'Dewi Anggraini', color:'cover-9', views:'2.7M' },
-  { id:'4',  title:'Dewa Pedang Tak Terkalahkan', author:'Bagas Saputra',  color:'cover-3', views:'3.2M' },
-  { id:'2',  title:'異世界転生の英雄譚',           author:'YamazakiRen',    color:'cover-1', views:'2.4M' },
-  { id:'7',  title:'Cinta di Antara Dua Dunia',   author:'Nadia Rahma',    color:'cover-5', views:'1.8M' },
-  { id:'3',  title:'The Last Dungeon Crawler',     author:'MarcusWilde',    color:'cover-2', views:'1.1M' },
-  { id:'1',  title:'Sang Raja yang Dilupakan',     author:'Ariana Kusuma',  color:'cover-6', views:'890K' },
+  { id: '8', title: '仙道修真录', author: 'CloudMtn', color: 'cover-3', views: '5.1M' },
+  { id: '10', title: 'Musim Gugur Sang Penyihir', author: 'Dewi Anggraini', color: 'cover-9', views: '2.7M' },
+  { id: '4', title: 'Dewa Pedang Tak Terkalahkan', author: 'Bagas Saputra', color: 'cover-3', views: '3.2M' },
+  { id: '2', title: '異世界転生の英雄譚', author: 'YamazakiRen', color: 'cover-1', views: '2.4M' },
+  { id: '7', title: 'Cinta di Antara Dua Dunia', author: 'Nadia Rahma', color: 'cover-5', views: '1.8M' },
+  { id: '3', title: 'The Last Dungeon Crawler', author: 'MarcusWilde', color: 'cover-2', views: '1.1M' },
+  { id: '1', title: 'Sang Raja yang Dilupakan', author: 'Ariana Kusuma', color: 'cover-6', views: '890K' },
 ]
 
 const GENRES = [
-  { name:'Action',icon:'⚔️',slug:'action',count:'2,840'},{name:'Romance',icon:'💕',slug:'romance',count:'3,120'},
-  { name:'Fantasy',icon:'🌀',slug:'fantasy',count:'4,560'},{name:'Isekai',icon:'🌌',slug:'isekai',count:'1,890'},
-  { name:'Sci-Fi',icon:'🚀',slug:'sci-fi',count:'980'},{name:'Mystery',icon:'🔍',slug:'mystery',count:'760'},
-  { name:'Horror',icon:'👻',slug:'horror',count:'540'},{name:'Drama',icon:'🎭',slug:'drama',count:'1,230'},
-  { name:'School',icon:'🎓',slug:'school-life',count:'690'},{name:'Xianxia',icon:'🏮',slug:'xianxia',count:'440'},
-  { name:'Historical',icon:'🏰',slug:'historical',count:'380'},{name:'GameLit',icon:'🎮',slug:'gamelit',count:'620'},
+  { name: 'Action', icon: '⚔️', slug: 'action', count: '2,840' }, { name: 'Romance', icon: '💕', slug: 'romance', count: '3,120' },
+  { name: 'Fantasy', icon: '🌀', slug: 'fantasy', count: '4,560' }, { name: 'Isekai', icon: '🌌', slug: 'isekai', count: '1,890' },
+  { name: 'Sci-Fi', icon: '🚀', slug: 'sci-fi', count: '980' }, { name: 'Mystery', icon: '🔍', slug: 'mystery', count: '760' },
+  { name: 'Horror', icon: '👻', slug: 'horror', count: '540' }, { name: 'Drama', icon: '🎭', slug: 'drama', count: '1,230' },
+  { name: 'School', icon: '🎓', slug: 'school-life', count: '690' }, { name: 'Xianxia', icon: '🏮', slug: 'xianxia', count: '440' },
+  { name: 'Historical', icon: '🏰', slug: 'historical', count: '380' }, { name: 'GameLit', icon: '🎮', slug: 'gamelit', count: '620' },
 ]

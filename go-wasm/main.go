@@ -15,11 +15,7 @@ func main() {
 	obj.Set("rankScore",    js.FuncOf(jsRankScore))
 	obj.Set("readingTime",  js.FuncOf(jsReadingTime))
 	obj.Set("excerptText",  js.FuncOf(jsExcerptText))
-<<<<<<< HEAD
 	js.Global().Set("NoveloraWasm", obj)
-=======
-	js.Global().Set("NovelNestWasm", obj)
->>>>>>> bb63f203f9f6ba2fcfda878a8fe7f55974e94c48
 	select {}
 }
 

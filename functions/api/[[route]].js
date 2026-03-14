@@ -1,9 +1,5 @@
 /**
-<<<<<<< HEAD
  * Novelora — Hono Backend (Cloudflare Pages Functions)
-=======
- * NovelNest — Hono Backend (Cloudflare Pages Functions)
->>>>>>> bb63f203f9f6ba2fcfda878a8fe7f55974e94c48
  * All /api/* routes
  */
 import { Hono } from "hono";
@@ -20,11 +16,7 @@ const app = new Hono().basePath("/api");
 app.use(
   "*",
   cors({
-<<<<<<< HEAD
     origin: ["https://novelora.my.id", "http://localhost:5173"],
-=======
-    origin: ["https://novelnest.pages.dev", "http://localhost:5173"],
->>>>>>> bb63f203f9f6ba2fcfda878a8fe7f55974e94c48
     allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   }),
 );
@@ -639,11 +631,7 @@ app.post("/auth/send-verification", async (c) => {
         <div style="max-width:420px;margin:0 auto;background:#1a1a18;border-radius:16px;padding:36px;color:#e8e0d4;">
           <div style="text-align:center;margin-bottom:28px;">
             <div style="font-size:36px;margin-bottom:10px;">📚</div>
-<<<<<<< HEAD
             <h1 style="margin:0;font-size:22px;font-weight:700;color:#e8c89a;letter-spacing:-0.5px;">Novelora</h1>
-=======
-            <h1 style="margin:0;font-size:22px;font-weight:700;color:#e8c89a;letter-spacing:-0.5px;">NovelNest</h1>
->>>>>>> bb63f203f9f6ba2fcfda878a8fe7f55974e94c48
           </div>
           <h2 style="font-size:17px;color:#e8e0d4;margin:0 0 8px;">Kode Verifikasi Akun Kamu</h2>
           <p style="color:#9c9c90;font-size:14px;margin:0 0 24px;line-height:1.6;">
@@ -666,15 +654,9 @@ app.post("/auth/send-verification", async (c) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-<<<<<<< HEAD
         from: "Novelora <noreply@novelora.my.id>", // ganti dengan domain kamu
         to: [email],
         subject: `${code} — Kode Verifikasi Novelora`,
-=======
-        from: "NovelNest <noreply@novelora.my.id>", // ganti dengan domain kamu
-        to: [email],
-        subject: `${code} — Kode Verifikasi NovelNest`,
->>>>>>> bb63f203f9f6ba2fcfda878a8fe7f55974e94c48
         html,
       }),
     });

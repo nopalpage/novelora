@@ -41,7 +41,7 @@ Di Supabase Dashboard → SQL Editor, jalankan isi file `supabase-migration-auth
 ### Ganti `from` email di route.js
 Di `functions/api/[[route]].js`, cari baris:
 ```
-from: 'NovelNest <noreply@novelnest.pages.dev>',
+from: 'Novelora <noreply@novelora.my.id>',
 ```
 Ganti dengan domain kamu yang sudah diverifikasi di Resend.
 
@@ -49,7 +49,7 @@ Ganti dengan domain kamu yang sudah diverifikasi di Resend.
 
 ## Langkah 4 — Tambah Secret di Cloudflare Pages
 
-Cloudflare Dashboard → Pages → novelnest → Settings → Variables and Secrets:
+Cloudflare Dashboard → Pages → novelora → Settings → Variables and Secrets:
 
 | Variable | Value |
 |----------|-------|

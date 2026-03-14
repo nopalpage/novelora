@@ -29,11 +29,7 @@ function _html() {
             <rect x="15.5" y="8.5" width="1" height="12" rx=".5" fill="#f5e0b8"/>
             <path d="M6 23 Q16 18.5 26 23" stroke="#c9a060" stroke-width="1.4" fill="none" stroke-linecap="round"/>
           </svg>
-<<<<<<< HEAD
           <span class="modal-title">Novelora</span>
-=======
-          <span class="modal-title">NovelNest</span>
->>>>>>> bb63f203f9f6ba2fcfda878a8fe7f55974e94c48
         </div>
         <button class="btn btn-icon btn-ghost text-ink-3" id="auth-close">✕</button>
       </div>
@@ -173,14 +169,14 @@ function _bind(defaultTab) {
   document.getElementById('btn-do-login')?.addEventListener('click', async (e) => {
     const btn = e.currentTarget
     const email = document.getElementById('l-email').value.trim()
-    const pass  = document.getElementById('l-pass').value
+    const pass = document.getElementById('l-pass').value
     if (!email || !pass) { toastError('Isi semua kolom'); return }
     btn.disabled = true; btn.textContent = 'Masuk…'
     try {
       await signIn(email, pass)
       _close()
       toastSuccess('Selamat datang kembali! 👋')
-    } catch(err) {
+    } catch (err) {
       toastError(err.message)
     } finally {
       btn.disabled = false; btn.textContent = 'Masuk'
@@ -189,10 +185,10 @@ function _bind(defaultTab) {
 
   // ── Register → kirim kode verifikasi ──
   document.getElementById('btn-do-register')?.addEventListener('click', async (e) => {
-    const btn   = e.currentTarget
-    const user  = document.getElementById('r-user').value.trim()
+    const btn = e.currentTarget
+    const user = document.getElementById('r-user').value.trim()
     const email = document.getElementById('r-email').value.trim()
-    const pass  = document.getElementById('r-pass').value
+    const pass = document.getElementById('r-pass').value
     if (!user || !email || !pass) { toastError('Isi semua kolom'); return }
     if (pass.length < 8) { toastError('Password minimal 8 karakter'); return }
     btn.disabled = true; btn.textContent = 'Membuat akun…'
@@ -201,7 +197,7 @@ function _bind(defaultTab) {
       await sendVerificationCode(email)
       _showVerifyStep(email)
       toastSuccess('Kode verifikasi dikirim! 📬')
-    } catch(err) {
+    } catch (err) {
       toastError(err.message)
       btn.disabled = false; btn.textContent = 'Buat Akun'
     }
@@ -209,7 +205,7 @@ function _bind(defaultTab) {
 
   // ── Verifikasi kode ──
   document.getElementById('btn-do-verify')?.addEventListener('click', async (e) => {
-    const btn  = e.currentTarget
+    const btn = e.currentTarget
     const code = document.getElementById('v-code').value.trim()
     const email = document.getElementById('verify-email-display').textContent
     if (code.length !== 6) { toastError('Kode harus 6 digit'); return }
@@ -217,12 +213,8 @@ function _bind(defaultTab) {
     try {
       await verifyCode(email, code)
       _close()
-<<<<<<< HEAD
       toastSuccess('Email terverifikasi! Selamat datang di Novelora 🎉')
-=======
-      toastSuccess('Email terverifikasi! Selamat datang di NovelNest 🎉')
->>>>>>> bb63f203f9f6ba2fcfda878a8fe7f55974e94c48
-    } catch(err) {
+    } catch (err) {
       toastError(err.message)
       document.getElementById('v-code').value = ''
       btn.disabled = false; btn.textContent = 'Verifikasi'
@@ -239,7 +231,7 @@ function _showVerifyStep(email) {
 
   // Sembunyikan Google button dan divider
   document.getElementById('btn-google').closest('button').style.display = 'none'
-  document.querySelector('.flex.items-center.gap-3.mb-4')?.style && 
+  document.querySelector('.flex.items-center.gap-3.mb-4')?.style &&
     (document.querySelector('.flex.items-center.gap-3.mb-4').style.display = 'none')
 
   document.getElementById('verify-email-display').textContent = email
@@ -254,7 +246,7 @@ function _showVerifyStep(email) {
       await sendVerificationCode(email)
       toastSuccess('Kode baru dikirim!')
       _startResendCooldown()
-    } catch(err) {
+    } catch (err) {
       toastError(err.message)
       resendLabel.textContent = 'Kirim ulang'
     }
@@ -282,6 +274,6 @@ function _switchTab(tab) {
   document.querySelectorAll('.tab[data-tab]').forEach(t =>
     t.classList.toggle('active', t.dataset.tab === tab)
   )
-  document.getElementById('form-login')?.classList.toggle('hidden',    tab !== 'login')
+  document.getElementById('form-login')?.classList.toggle('hidden', tab !== 'login')
   document.getElementById('form-register')?.classList.toggle('hidden', tab !== 'register')
 }

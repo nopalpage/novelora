@@ -24,11 +24,7 @@ function _nav() {
   <header class="sticky top-0 z-[100] bg-paper/95 backdrop-blur-md border-b border-line">
     <!-- Announce bar -->
     <div class="bg-ink text-paper text-center py-2 text-[12px]">
-<<<<<<< HEAD
       🎉 Novelora is live — free to read &amp; write. &nbsp;
-=======
-      🎉 NovelNest is live — free to read &amp; write. &nbsp;
->>>>>>> bb63f203f9f6ba2fcfda878a8fe7f55974e94c48
       <a href="/browse" data-link class="text-[#e8c89a] border-b border-[#e8c89a]/40 hover:border-[#e8c89a]">Explore →</a>
     </div>
     <div class="container mx-auto px-6">
@@ -36,11 +32,7 @@ function _nav() {
         <!-- Logo -->
         <a href="/" data-link class="flex items-center gap-2 mr-8 shrink-0">
           ${_logoSvg(32)}
-<<<<<<< HEAD
           <span class="font-serif text-[19px] font-bold tracking-tight">Novelora</span>
-=======
-          <span class="font-serif text-[19px] font-bold tracking-tight">NovelNest</span>
->>>>>>> bb63f203f9f6ba2fcfda878a8fe7f55974e94c48
         </a>
         <!-- Nav links -->
         <nav class="hidden md:flex items-center flex-1">
@@ -113,7 +105,7 @@ function _updateNavUser(auth) {
 
   // Re-bind events
   document.getElementById('btn-signin')?.addEventListener('click', () => openAuthModal('login'))
-  document.getElementById('btn-join')?.addEventListener('click',   () => openAuthModal('register'))
+  document.getElementById('btn-join')?.addEventListener('click', () => openAuthModal('register'))
   document.getElementById('btn-signout')?.addEventListener('click', async () => {
     await signOut(); toastSuccess('Signed out')
   })
@@ -146,26 +138,18 @@ function _footer() {
     <div class="container mx-auto px-6 py-12">
       <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
         <div class="col-span-2 md:col-span-1">
-<<<<<<< HEAD
           <div class="flex items-center gap-2 mb-3">${_logoSvg(24)}<span class="font-serif font-bold text-[17px]">Novelora</span></div>
-=======
-          <div class="flex items-center gap-2 mb-3">${_logoSvg(24)}<span class="font-serif font-bold text-[17px]">NovelNest</span></div>
->>>>>>> bb63f203f9f6ba2fcfda878a8fe7f55974e94c48
           <p class="text-[13px] text-ink-3 leading-relaxed max-w-[200px] mb-4">Your home for web novels from around the world.</p>
           <div class="flex gap-1.5 flex-wrap">
-            ${['EN','ID','日本語','한국어','中文'].map(l => `<button class="px-2.5 py-1 text-[11px] font-medium border border-line rounded hover:border-ink-3 text-ink-3 hover:text-ink transition-colors">${l}</button>`).join('')}
+            ${['EN', 'ID', '日本語', '한국어', '中文'].map(l => `<button class="px-2.5 py-1 text-[11px] font-medium border border-line rounded hover:border-ink-3 text-ink-3 hover:text-ink transition-colors">${l}</button>`).join('')}
           </div>
         </div>
-        ${_footerCol('Discover', [['/',  'Browse'],  ['/browse','Genres'], ['/rankings','Rankings'], ['/browse?filter=new','New Releases']])}
-        ${_footerCol('For Writers', [['/write','Start Writing'], ['/guide','Writer Guide'], ['/rules','Content Rules']])}
-        ${_footerCol('Company', [['/about','About'], ['/contact','Contact'], ['/privacy','Privacy'], ['/terms','Terms'], ['/dmca','DMCA']])}
+        ${_footerCol('Discover', [['/', 'Browse'], ['/browse', 'Genres'], ['/rankings', 'Rankings'], ['/browse?filter=new', 'New Releases']])}
+        ${_footerCol('For Writers', [['/write', 'Start Writing'], ['/guide', 'Writer Guide'], ['/rules', 'Content Rules']])}
+        ${_footerCol('Company', [['/about', 'About'], ['/contact', 'Contact'], ['/privacy', 'Privacy'], ['/terms', 'Terms'], ['/dmca', 'DMCA']])}
       </div>
       <div class="flex flex-col sm:flex-row justify-between items-center pt-6 border-t border-line gap-2">
-<<<<<<< HEAD
         <span class="text-[12px] text-ink-4">© 2025 Novelora. All rights reserved.</span>
-=======
-        <span class="text-[12px] text-ink-4">© 2025 NovelNest. All rights reserved.</span>
->>>>>>> bb63f203f9f6ba2fcfda878a8fe7f55974e94c48
         <span class="text-[12px] text-ink-4">Made for readers &amp; writers worldwide</span>
       </div>
     </div>
@@ -177,7 +161,7 @@ function _footerCol(title, links) {
   <div>
     <div class="text-[11px] font-bold uppercase tracking-widest text-ink-3 mb-3">${title}</div>
     <ul class="space-y-2">
-      ${links.map(([href,label]) => `<li><a href="${href}" data-link class="text-[13.5px] text-ink-2 hover:text-ink transition-colors">${label}</a></li>`).join('')}
+      ${links.map(([href, label]) => `<li><a href="${href}" data-link class="text-[13.5px] text-ink-2 hover:text-ink transition-colors">${label}</a></li>`).join('')}
     </ul>
   </div>`
 }
