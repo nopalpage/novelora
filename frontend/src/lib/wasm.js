@@ -1,7 +1,7 @@
 let _ready = false
 
 export async function initWasm(url) {
-  await _loadScript('https://cdnjs.cloudflare.com/ajax/libs/go/1.22.0/wasm_exec.min.js')
+  await _loadScript('/wasm/wasm_exec.js')
   const go = new Go()
   const resp = await fetch(url)
   if (!resp.ok) throw new Error(`WASM ${resp.status}`)

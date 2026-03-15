@@ -1,0 +1,13 @@
+{
+  "go.toolsEnvVars": {
+    "GOOS": "js",
+    "GOARCH": "wasm"
+  },
+  "gopls": {
+    "ui.completion.usePlaceholders": true,
+    "build.env": {
+      "GOOS": "js",
+      "GOARCH": "wasm"
+    }
+  }
+}

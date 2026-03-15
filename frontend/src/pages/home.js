@@ -14,9 +14,9 @@ const COVERS = ['cover-1', 'cover-2', 'cover-3', 'cover-4', 'cover-5', 'cover-6'
 const STRIPE = `repeating-linear-gradient(-45deg,transparent,transparent 8px,rgba(255,255,255,.04) 8px,rgba(255,255,255,.04) 9px)`
 
 let _unsubs = []
-let _novels = MOCK_NOVELS
-let _chapters = MOCK_CHAPTERS
-let _ranks = MOCK_RANKS
+let _novels = []
+let _chapters = []
+let _ranks = []
 
 export async function render() {
   const c = document.getElementById('page-content')
@@ -30,7 +30,11 @@ export async function render() {
 
   if (novelsRes.status === 'fulfilled' && novelsRes.value?.data) {
     _novels = novelsRes.value.data
+  } else {
+    _novels = MOCK_NOVELS
   }
+  _chapters = (chaptersRes?.status === 'fulfilled' && chaptersRes.value?.data) ? chaptersRes.value.data : MOCK_CHAPTERS
+  _ranks = MOCK_RANKS
 
   // Render full page
   c.innerHTML = _html()

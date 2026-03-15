@@ -1,7 +1,8 @@
+//go:build js && wasm
+
 // NovelNest Go WASM
 // Build: cd go-wasm && make tiny (TinyGo recommended)
 package main
-
 import (
 	"math"
 	"strings"
