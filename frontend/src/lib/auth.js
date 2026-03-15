@@ -147,6 +147,13 @@ export async function sendVerificationCode(email) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email }),
   })
+  
+  if (!res.headers.get('content-type')?.includes('application/json')) {
+    const text = await res.text()
+    console.error("Non-JSON response from API:", text.slice(0, 500))
+    throw new Error(`API Endpoint Error (${res.status}): Please check backend logs.`)
+  }
+
   const json = await res.json()
   if (!json.ok) throw new Error(json.message || 'Gagal mengirim kode')
   return json.data
@@ -158,6 +165,13 @@ export async function verifyCode(email, code) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, code }),
   })
+
+  if (!res.headers.get('content-type')?.includes('application/json')) {
+    const text = await res.text()
+    console.error("Non-JSON response from API test:", text.slice(0, 500))
+    throw new Error(`API Endpoint Error (${res.status}): Please check backend logs.`)
+  }
+
   const json = await res.json()
   if (!json.ok) throw new Error(json.message || 'Kode tidak valid')
   return json.data
