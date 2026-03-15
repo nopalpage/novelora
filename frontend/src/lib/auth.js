@@ -1,6 +1,11 @@
 /**
  * Auth store — user session, role management.
  * Roles: 'admin' | 'author' | 'reader' | null (guest)
+ *
+ * FIX v1.3.1:
+ *  - signInWithGoogle: gunakan VITE_SITE_URL untuk redirect yang benar
+ *  - _loadProfile: retry logic jika profile belum ada (race condition Google OAuth)
+ *  - handleOAuthCallback: tangani hash/query param dari Supabase setelah redirect
  */
 import { sb } from './supabase.js'
 
@@ -39,19 +44,58 @@ export async function initAuth() {
   })
 }
 
+/**
+ * Load user profile dari tabel `profiles`.
+ * Jika profile belum ada (misalnya trigger belum selesai), retry hingga 3x.
+ */
 async function _loadProfile(session) {
   _state.session = session
   _state.user    = session.user
 
   if (sb) {
-    const { data: profile } = await sb
-      .from('profiles')
-      .select('*')
-      .eq('id', session.user.id)
-      .single()
+    let profile = null
+    let attempts = 0
+
+    // Retry karena trigger DB kadang butuh ~500ms setelah OAuth callback
+    while (!profile && attempts < 3) {
+      if (attempts > 0) await new Promise(r => setTimeout(r, 600 * attempts))
+
+      const { data } = await sb
+        .from('profiles')
+        .select('*')
+        .eq('id', session.user.id)
+        .single()
+
+      profile = data
+      attempts++
+    }
+
+    // Jika masih null (trigger gagal), buat profil manual sebagai fallback
+    if (!profile) {
+      const meta = session.user.user_metadata || {}
+      const fallbackUsername =
+        meta.full_name || meta.name ||
+        session.user.email?.split('@')[0] || 'user'
+
+      const { data: newProfile } = await sb
+        .from('profiles')
+        .upsert({
+          id:         session.user.id,
+          email:      session.user.email,
+          username:   fallbackUsername,
+          avatar_url: meta.avatar_url || meta.picture || null,
+          role:       'reader',
+        }, { onConflict: 'id' })
+        .select()
+        .single()
+
+      profile = newProfile
+    }
+
     _state.profile = profile
     _state.role    = profile?.role || 'reader'
   }
+
   _state.loading = false
   emit()
 }
@@ -71,19 +115,32 @@ export async function signUp(email, password, username) {
     password,
     options: {
       data: { username },
-      emailRedirectTo: undefined, // kita handle verifikasi sendiri
+      emailRedirectTo: undefined,
     },
   })
   if (error) throw error
   return data
 }
 
+/**
+ * Login dengan Google OAuth.
+ *
+ * FIX UTAMA: Gunakan VITE_SITE_URL (bukan window.location.origin) agar
+ * redirect selalu ke https://novelora.my.id — bukan ke URL Supabase dengan
+ * domain kamu sebagai path (bug yang menyebabkan error "requested path is invalid").
+ */
 export async function signInWithGoogle() {
   if (!sb) throw new Error('Supabase not configured')
+
+  // Prioritas: env var → window.location.origin (fallback localhost)
+  const siteUrl =
+    (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SITE_URL) ||
+    window.location.origin
+
   const { error } = await sb.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${window.location.origin}/`,
+      redirectTo: `${siteUrl}/`,   // ← https://novelora.my.id/
       queryParams: {
         access_type: 'offline',
         prompt: 'consent',
@@ -127,4 +184,8 @@ export async function updateProfile(updates) {
     .update(updates)
     .eq('id', _state.user.id)
   if (error) throw error
+  // Refresh local state
+  if (_state.profile) _state.profile = { ..._state.profile, ...updates }
+  if (updates.role)   _state.role = updates.role
+  emit()
 }
