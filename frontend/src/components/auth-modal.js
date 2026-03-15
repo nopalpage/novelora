@@ -190,17 +190,18 @@ function _bind(defaultTab) {
       return
     }
 
-    // Decode token untuk mendapatkan email (kita memecah payload JWT)
+    // Decode token untuk mendapatkan email
     try {
       btnText.textContent = 'Mengirim OTP...'
-      const payloadBase64 = token.split('.')[1]
-      let decodedJson = atob(payloadBase64.replace(/-/g, '+').replace(/_/g, '/'))
-      // Tangani karakter unicode
-      decodedJson = decodeURIComponent(Array.prototype.map.call(decodedJson, function(c) {
+      
+      // Parse payload JWT dengan lebih aman
+      const base64Url = token.split('.')[1]
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
           return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
       }).join(''))
       
-      const payload = JSON.parse(decodedJson)
+      const payload = JSON.parse(jsonPayload)
       const email = payload.email
 
       if (!email) throw new Error("Email tidak ditemukan di token Google")
