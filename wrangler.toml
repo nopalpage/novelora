@@ -1,0 +1,7 @@
+# Novelora Frontend — Cloudflare Pages
+# Deploy: wrangler pages deploy ./dist
+# Account: semua313@...
+
+name = "novelora-frontend"
+compatibility_date = "2024-11-01"
+pages_build_output_dir = "./dist"
