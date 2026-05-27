@@ -1,0 +1,27 @@
+# Novelora Backend — Cloudflare Workers
+# Deploy: wrangler deploy
+# Account: semua313@...
+#
+# Custom domain: api.novelora.my.id
+# (Tambahkan CNAME di DNS zone novelora.my.id, akun semua313)
+
+name = "novelora-backend"
+main = "src/index.js"
+compatibility_date = "2024-11-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+ENVIRONMENT = "production"
+
+# Secrets — set via CLI:
+#   wrangler secret put SUPABASE_URL
+#   wrangler secret put SUPABASE_SERVICE_KEY
+#   wrangler secret put RESEND_API_KEY
+#
+# Atau set di Cloudflare Dashboard:
+#   Workers → novelora-api → Settings → Variables and Secrets
+
+# Custom domain yang sudah di-set di Dashboard
+routes = [
+  { pattern = "api.novelora.my.id", custom_domain = true }
+]
