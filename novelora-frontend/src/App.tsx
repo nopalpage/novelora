@@ -17,7 +17,7 @@ import { Chapter } from "./pages/Chapter";
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
-import { AdsterraBackground } from "./components/AdsterraAd";
+import { AdsterraBackground, AdsterraBanner } from "./components/AdsterraAd";
 import { api } from "./lib/api";
 import { useEffect } from "react";
 
@@ -72,6 +72,10 @@ export default function App() {
           <AdsterraBackground />
           
           <Header />
+          
+          <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+            <AdsterraBanner width={728} height={90} />
+          </div>
 
           <Routes>
             <Route path="/" element={<Home />} />

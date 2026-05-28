@@ -1,6 +1,6 @@
 import { PopularNovelCard, LatestUpdateCard, PopularNovelSkeleton, LatestUpdateSkeleton } from "../components/NovelCards";
 import { useState, useEffect } from "react";
-import { AdsterraBanner, AdsterraNativeBanner } from "../components/AdsterraAd";
+
 import { SidebarChat, SidebarLastRead } from "../components/SidebarWidgets";
 import { motion } from "motion/react";
 import { useLanguage } from "../contexts/LanguageContext";
@@ -56,7 +56,6 @@ export function Home() {
   return (
     <>
       <main className="flex-grow max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full z-10 relative">
-        <AdsterraNativeBanner />
         
         {/* Popular Novels Section */}
         {siteSettings?.hidePopularNovels !== "on" && (
@@ -119,10 +118,6 @@ export function Home() {
         </section>
         )}
 
-        {/* Mid-page Ad Banner */}
-        <div className="my-6">
-          <AdsterraBanner width={728} height={90} />
-        </div>
 
         <div className="flex flex-col xl:flex-row gap-6">
           <div className="flex-grow min-w-0">
@@ -232,10 +227,6 @@ export function Home() {
       </aside>
     </div>
 
-    {/* Bottom Ad Banner */}
-    <div className="mt-8 mb-2">
-      <AdsterraBanner width={728} height={90} />
-    </div>
   </main>
 
 </>

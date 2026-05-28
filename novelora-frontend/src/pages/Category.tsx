@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { PopularNovelCard, LatestUpdateCard, PopularNovelSkeleton, LatestUpdateSkeleton } from "../components/NovelCards";
 import { Novel } from "../data";
 import { api } from "../lib/api";
-import { AdsterraBanner } from "../components/AdsterraAd";
+
 import { useState, useEffect } from "react";
 
 export function Category() {
@@ -42,7 +42,6 @@ export function Category() {
 
   return (
     <main className="flex-grow max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 z-10 relative">
-      <AdsterraBanner />
       <div className="flex items-center gap-2 mb-8 border-b border-gray-100 dark:border-gray-800 pb-4">
         <h2 className="text-2xl sm:text-3xl font-extrabold text-blue-600 dark:text-blue-500">{title}</h2>
       </div>

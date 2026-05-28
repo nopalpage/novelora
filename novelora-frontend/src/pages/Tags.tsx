@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { api } from "../lib/api";
-import { AdsterraBanner } from "../components/AdsterraAd";
+
 
 export function Tags() {
   const [isLoading, setIsLoading] = useState(true);
@@ -48,12 +48,7 @@ export function Tags() {
         <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-800 dark:text-white transition-colors duration-300">List</h2>
       </div>
 
-      {/* Top Ad Banner - Hide if no tags */}
-      {(isLoading || allTags.length > 0) && (
-        <div className="mb-6">
-          <AdsterraBanner width={728} height={90} />
-        </div>
-      )}
+
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
         {isLoading 
@@ -71,10 +66,6 @@ export function Tags() {
             ))}
       </div>
 
-      {/* Bottom Ad Banner */}
-      <div className="mt-8">
-        <AdsterraBanner width={728} height={90} />
-      </div>
     </main>
   );
 }
