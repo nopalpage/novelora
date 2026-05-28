@@ -1,0 +1,8 @@
+{
+  "name": "Sakuranovel Clone",
+  "description": "A clean, responsive web novel reading site clone featuring popular and latest novel updates.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
