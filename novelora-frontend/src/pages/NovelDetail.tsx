@@ -2,7 +2,7 @@ import { useParams, Link } from "react-router-dom";
 import { Novel } from "../data";
 import { Star, Clock, BookOpen, User, Bookmark, Flag, X, Info } from "lucide-react";
 import { useState, useEffect, useRef, useMemo } from "react";
-
+import { AdsterraBanner, AdsterraNativeBanner } from "../components/AdsterraAd";
 import { NovelComments } from "../components/NovelComments";
 import { SidebarChat, SidebarLastRead } from "../components/SidebarWidgets";
 import { useLanguage } from "../contexts/LanguageContext";
@@ -268,7 +268,9 @@ export function NovelDetail() {
           </div>
         </div>
 
-
+        <div className="mt-8 mb-4">
+          <AdsterraNativeBanner />
+        </div>
 
         {/* Content Section */}
         <div className="mt-8 flex flex-col xl:flex-row gap-6">

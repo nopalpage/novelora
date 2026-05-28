@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { LatestUpdateCard, LatestUpdateSkeleton } from "../components/NovelCards";
 import { Novel } from "../data";
 import { api } from "../lib/api";
-
+import { AdsterraBanner } from "../components/AdsterraAd";
 import { ChevronDown, ChevronRight, Filter } from "lucide-react";
 import { useLanguage } from "../contexts/LanguageContext";
 
@@ -100,6 +100,8 @@ export function Search() {
 
   return (
     <main className="flex-grow max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full z-10 relative">
+      <AdsterraBanner />
+      
       <div className="flex items-center gap-2 mb-6">
         <h2 className="text-2xl sm:text-3xl font-extrabold text-blue-600 dark:text-blue-500">{t("search.advanced")}</h2>
         <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-800 dark:text-white transition-colors duration-300">{t("search.search")}</h2>

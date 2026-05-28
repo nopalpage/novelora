@@ -34,7 +34,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { io } from "socket.io-client";
-
+import { AdsterraBanner } from "../components/AdsterraAd";
 
 export function ControlPanel() {
   const { t } = useLanguage();
@@ -643,7 +643,10 @@ export function ControlPanel() {
                 ))}
               </div>
 
-
+              {/* Ad Banner in Dashboard */}
+              <div className="py-2">
+                <AdsterraBanner width={728} height={90} />
+              </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 rounded-lg p-5">
@@ -915,7 +918,15 @@ export function ControlPanel() {
                     ))}
                   </tbody>
                 </table>
-              </div>            </div>
+              </div>
+
+              {/* Bottom Ad for Novels Tab */}
+              {localNovels.length > 0 && (
+                <div className="mt-6">
+                  <AdsterraBanner width={728} height={90} />
+                </div>
+              )}
+            </div>
           )}
 
           {/* ── Manage Users (Owner only) ── */}

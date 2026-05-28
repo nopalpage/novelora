@@ -20,17 +20,6 @@ export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const smartlinks = [
-    "https://commendtwisted.com/fx46ytf3?key=19c8d09d425cf8b968c8e3b263624f85",
-    "https://commendtwisted.com/i53s7a1j?key=c9f99a424b17bd9ca885694265b318e5",
-    "https://commendtwisted.com/q61hw05vm?key=5d805d2656d3b5eea34a9aaa1f1f8943"
-  ];
-
-  const handleSupportClick = () => {
-    const randomLink = smartlinks[Math.floor(Math.random() * smartlinks.length)];
-    window.open(randomLink, "_blank", "noopener,noreferrer");
-  };
-
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -134,13 +123,6 @@ export function Header() {
               >
                 {t("nav.random")}
               </Link>
-              <button
-                onClick={handleSupportClick}
-                className="px-3 py-2 rounded-md text-sm font-bold text-amber-300 hover:bg-blue-700 dark:hover:bg-blue-900 hover:text-amber-100 transition-colors flex items-center gap-1"
-              >
-                <ion-icon name="heart"></ion-icon>
-                Support Us
-              </button>
             </nav>
 
             {/* Search and Theme */}
@@ -317,16 +299,6 @@ export function Header() {
               >
                 Random Novel
               </Link>
-              <button
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  handleSupportClick();
-                }}
-                className="w-full text-left flex items-center gap-2 px-3 py-2.5 rounded-md text-base font-bold text-amber-600 dark:text-amber-500 hover:text-amber-700 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-gray-800/50 transition-colors"
-              >
-                <ion-icon name="heart"></ion-icon>
-                Support Us
-              </button>
             </div>
           </div>
         </div>

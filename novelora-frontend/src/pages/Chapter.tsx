@@ -2,7 +2,7 @@ import { useParams, Link } from "react-router-dom";
 import { Novel } from "../data";
 import { ChevronLeft, ChevronRight, Settings, AlignLeft, AlignCenter, BookOpen, ChevronUp, MessageSquare } from "lucide-react";
 import { useState, useEffect } from "react";
-
+import { AdsterraBanner } from "../components/AdsterraAd";
 import { NovelComments } from "../components/NovelComments";
 import { useLanguage } from "../contexts/LanguageContext";
 import { api } from "../lib/api";
@@ -146,12 +146,20 @@ export function Chapter() {
     <div className="flex-grow w-full bg-gray-50 dark:bg-[#111216] min-h-screen">
       <div className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex gap-6">
         
-
+        {/* Left Sidebar Ad */}
+        <div className="hidden lg:block w-[160px] xl:w-[300px] shrink-0">
+          <div className="sticky top-24 space-y-6">
+            <AdsterraBanner width={160} height={600} format="Vertical Banner" />
+          </div>
+        </div>
 
         {/* Main Content */}
         <div className="flex-grow max-w-6xl min-w-0 mx-auto w-full">
           
-
+          {/* Top Ad */}
+          <div className="mb-6 flex justify-center">
+            <AdsterraBanner width={728} height={90} format="Banner" />
+          </div>
 
         {/* Header / Navigation */}
         <div className="bg-white dark:bg-[#1a1b26] rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-4 mb-6 sticky top-20 z-30 transition-all">
@@ -224,7 +232,10 @@ export function Chapter() {
           </div>
         </article>
         
-
+        {/* Bottom Ad */}
+        <div className="mb-8">
+          <AdsterraBanner width={728} height={90} format="Banner" />
+        </div>
 
         {/* Bottom Navigation */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white dark:bg-[#1a1b26] rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-4 mb-8">
@@ -262,7 +273,12 @@ export function Chapter() {
         <NovelComments />
         </div>
         
-
+        {/* Right Sidebar Ad */}
+        <div className="hidden 2xl:block w-[300px] shrink-0">
+          <div className="sticky top-24 space-y-6">
+            <AdsterraBanner width={300} height={600} format="Vertical Banner" />
+          </div>
+        </div>
       </div>
     </div>
   );
