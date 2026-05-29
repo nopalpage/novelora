@@ -268,9 +268,7 @@ export function NovelDetail() {
           </div>
         </div>
 
-        <div className="mt-8 mb-4">
-          <AdsterraNativeBanner />
-        </div>
+
 
         {/* Content Section */}
         <div className="mt-8 flex flex-col xl:flex-row gap-6">

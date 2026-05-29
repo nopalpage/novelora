@@ -119,10 +119,7 @@ export function Home() {
         </section>
         )}
 
-        {/* Mid-page Ad Banner */}
-        <div className="my-6">
-          <AdsterraBanner width={728} height={90} />
-        </div>
+
 
         <div className="flex flex-col xl:flex-row gap-6">
           <div className="flex-grow min-w-0">

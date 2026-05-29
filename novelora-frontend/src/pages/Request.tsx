@@ -176,12 +176,7 @@ export function Request() {
           </div>
         </div>
 
-        {/* Ad Banner between form and list - Hide if no comments */}
-        {comments.length > 0 && (
-          <div className="my-6">
-            <AdsterraBanner width={728} height={90} />
-          </div>
-        )}
+
 
         {/* Comments Header */}
         <div className="flex items-center justify-between border-b-2 border-gray-100 dark:border-gray-800 pb-3 mb-8">

@@ -643,10 +643,7 @@ export function ControlPanel() {
                 ))}
               </div>
 
-              {/* Ad Banner in Dashboard */}
-              <div className="py-2">
-                <AdsterraBanner width={728} height={90} />
-              </div>
+
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 rounded-lg p-5">
@@ -920,12 +917,6 @@ export function ControlPanel() {
                 </table>
               </div>
 
-              {/* Bottom Ad for Novels Tab */}
-              {localNovels.length > 0 && (
-                <div className="mt-6">
-                  <AdsterraBanner width={728} height={90} />
-                </div>
-              )}
             </div>
           )}
 
