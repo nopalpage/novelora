@@ -220,10 +220,7 @@ export function Request() {
           )}
         </div>
 
-        {/* Bottom Ad Banner */}
-        <div className="mt-10">
-          <AdsterraBanner width={728} height={90} />
-        </div>
+
       </div>
     </main>
   );

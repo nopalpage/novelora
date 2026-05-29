@@ -791,8 +791,22 @@ app.delete("/me/history", requireAuth, async (c) => {
 app.get("/users", requireAdmin, async (c) => {
   const supabase = db(c);
   if (!supabase) return ok(c, []);
-  const { data } = await supabase.from("profiles").select("*").order("created_at", { ascending: false }).limit(100);
-  return ok(c, data || []);
+  const { data: profiles } = await supabase.from("profiles").select("*").order("created_at", { ascending: false }).limit(100);
+  
+  let authUsers = [];
+  try {
+    const { data: authData } = await supabase.auth.admin.listUsers();
+    authUsers = authData?.users || [];
+  } catch (e) {
+    console.error("Failed to fetch auth users", e);
+  }
+
+  const mapped = (profiles || []).map(p => {
+    const authUser = authUsers.find(u => u.id === p.id);
+    return { ...p, email: authUser?.email || "No Email Found" };
+  });
+
+  return ok(c, mapped);
 });
 
 app.put("/users/:id", requireAdmin, async (c) => {

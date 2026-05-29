@@ -238,10 +238,7 @@ export function Home() {
       </aside>
     </div>
 
-    {/* Bottom Ad Banner */}
-    <div className="mt-8 mb-2">
-      <AdsterraBanner width={728} height={90} />
-    </div>
+
   </main>
 
 </>

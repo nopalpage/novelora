@@ -71,10 +71,7 @@ export function Tags() {
             ))}
       </div>
 
-      {/* Bottom Ad Banner */}
-      <div className="mt-8">
-        <AdsterraBanner width={728} height={90} />
-      </div>
+
     </main>
   );
 }
