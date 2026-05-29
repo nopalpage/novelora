@@ -4,7 +4,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { io, Socket } from "socket.io-client";
 import { useLanguage } from "../contexts/LanguageContext";
-import { api } from "../lib/api";
+import { api, getNovelUrl } from "../lib/api";
 import { Novel } from "../data";
 
 interface ChatMessage {
@@ -244,7 +244,7 @@ export function SidebarLastRead() {
            ))
         ) : lastRead.map((novel, idx) => {
           return (
-          <Link key={novel.id} to={`/novel/${novel.id}`} className={`flex gap-3 group p-4 ${idx !== lastRead.length - 1 ? 'border-b border-gray-200 dark:border-[#2d2d2d]' : ''}`}>
+          <Link key={novel.id} to={getNovelUrl(novel)} className={`flex gap-3 group p-4 ${idx !== lastRead.length - 1 ? 'border-b border-gray-200 dark:border-[#2d2d2d]' : ''}`}>
             <div className="w-[52px] h-[72px] shrink-0 rounded overflow-hidden shadow-sm relative">
               <img src={novel.image} alt={novel.title} onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = "/novelora-fallback.svg"; }} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
             </div>

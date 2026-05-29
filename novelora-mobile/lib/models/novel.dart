@@ -34,4 +34,18 @@ class Novel {
       views: json['views'] as int? ?? json['total_views'] as int? ?? 0,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'author': author,
+      'cover_url': coverUrl,
+      'description': description,
+      'status': status,
+      'origin': origin,
+      'rating': rating,
+      'views': views,
+    };
+  }
 }

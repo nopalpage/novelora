@@ -234,7 +234,18 @@ app.get("/novels/search", async (c) => {
 app.get("/novels/:id", cache({ cacheName: "novel", cacheControl: "max-age=120,s-maxage=300" }), async (c) => {
   const supabase = db(c);
   if (!supabase) return err(c, "Database not available", 503);
-  const { data, error } = await supabase.from("novels").select("*").eq("id", c.req.param("id")).single();
+  
+  const idOrSlug = c.req.param("id");
+  const isId = /^\d+$/.test(idOrSlug);
+  
+  let q = supabase.from("novels").select("*");
+  if (isId) {
+    q = q.eq("id", idOrSlug);
+  } else {
+    q = q.eq("slug", idOrSlug);
+  }
+  
+  const { data, error } = await q.single();
   if (error) return err(c, "Not found", 404);
   return ok(c, data);
 });
@@ -242,7 +253,14 @@ app.get("/novels/:id", cache({ cacheName: "novel", cacheControl: "max-age=120,s-
 app.get("/novels/:id/related", cache({ cacheName: "related-novels", cacheControl: "max-age=300" }), async (c) => {
   const supabase = db(c);
   if (!supabase) return err(c, "Database not available", 503);
-  const { data: currentNovel } = await supabase.from("novels").select("id, origin").eq("id", c.req.param("id")).single();
+  
+  const idOrSlug = c.req.param("id");
+  const isId = /^\d+$/.test(idOrSlug);
+  let q = supabase.from("novels").select("id, origin");
+  if (isId) q = q.eq("id", idOrSlug);
+  else q = q.eq("slug", idOrSlug);
+  
+  const { data: currentNovel } = await q.single();
   if (!currentNovel) return ok(c, []);
   
   const { data, error } = await supabase.from("novels")
@@ -318,9 +336,20 @@ app.delete("/novels/:id", requireAdmin, async (c) => {
 app.get("/novels/:id/chapters", cache({ cacheName: "chapters", cacheControl: "max-age=60" }), async (c) => {
   const supabase = db(c);
   if (!supabase) return ok(c, []);
+  
+  const idOrSlug = c.req.param("id");
+  const isId = /^\d+$/.test(idOrSlug);
+  let novelId = idOrSlug;
+  
+  if (!isId) {
+    const { data: novel } = await supabase.from("novels").select("id").eq("slug", idOrSlug).single();
+    if (!novel) return err(c, "Novel not found", 404);
+    novelId = novel.id;
+  }
+  
   const { data, error } = await supabase.from("chapters")
     .select("id,chapter_num,title,created_at")
-    .eq("novel_id", c.req.param("id")).order("chapter_num", { ascending: true });
+    .eq("novel_id", novelId).order("chapter_num", { ascending: true });
   if (error) return err(c, error.message, 500);
   const mapped = (data || []).map(ch => ({ ...ch, translation_type: "HTL" }));
   return ok(c, mapped);
@@ -350,6 +379,26 @@ app.get("/chapters/:id", cache({ cacheName: "chapter-content", cacheControl: "ma
     .eq("id", c.req.param("id")).single();
   if (error) return err(c, "Not found", 404);
   c.executionCtx?.waitUntil(supabase.rpc("increment_chapter_views", { chapter_id: c.req.param("id") }));
+  return ok(c, { ...data, translation_type: "HTL" });
+});
+
+app.get("/novels/:slug/chapters/:chapter_num", cache({ cacheName: "chapter-content-slug", cacheControl: "max-age=300,s-maxage=600" }), async (c) => {
+  const supabase = db(c);
+  if (!supabase) return err(c, "Not found", 404);
+  
+  const slug = c.req.param("slug");
+  const chapterNum = c.req.param("chapter_num");
+  
+  const { data: novel, error: novelError } = await supabase.from("novels").select("id").eq("slug", slug).single();
+  if (novelError || !novel) return err(c, "Novel not found", 404);
+  
+  const { data, error } = await supabase.from("chapters")
+    .select("id,novel_id,chapter_num,title,content,created_at")
+    .eq("novel_id", novel.id)
+    .eq("chapter_num", chapterNum).single();
+    
+  if (error) return err(c, "Chapter not found", 404);
+  c.executionCtx?.waitUntil(supabase.rpc("increment_chapter_views", { chapter_id: data.id }));
   return ok(c, { ...data, translation_type: "HTL" });
 });
 

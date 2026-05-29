@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/novel.dart';
-import '../services/firebase_service.dart';
 import '../services/supabase_service.dart';
+import '../services/local_storage_service.dart';
 import 'novel_detail_screen.dart';
 import 'login_screen.dart';
 
@@ -14,7 +14,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _firebaseService = FirebaseService();
   final _supabaseService = SupabaseService();
   List<Novel> _novels = [];
   bool _isLoading = true;
@@ -24,28 +23,48 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _fetchNovels();
-    _currentUser = _firebaseService.currentUser;
-    _firebaseService.authStateChanges.listen((user) {
+    _currentUser = _supabaseService.currentUser;
+    _supabaseService.authStateChanges.listen((user) {
       if (mounted) {
         setState(() {
-          _currentUser = user;
+          _currentUser = user.session?.user; // In Supabase, AuthState contains session which has user
         });
       }
     });
   }
 
+  final _localStorage = LocalStorageService();
+
   Future<void> _fetchNovels() async {
     try {
+      // 1. Try to load from cache first for fast display
+      final cachedNovels = await _localStorage.getNovels();
+      if (cachedNovels != null && cachedNovels.isNotEmpty) {
+        setState(() {
+          _novels = cachedNovels;
+          _isLoading = false;
+        });
+      }
+
+      // 2. Fetch fresh data from Supabase
       final novels = await _supabaseService.getNovels(limit: 20);
-      setState(() {
-        _novels = novels;
-        _isLoading = false;
-      });
+      
+      // 3. Save to local storage
+      await _localStorage.saveNovels(novels);
+      
+      if (mounted) {
+        setState(() {
+          _novels = novels;
+          _isLoading = false;
+        });
+      }
     } catch (e) {
       debugPrint('Error fetching novels: $e');
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -77,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: const Icon(Icons.person),
               onSelected: (value) {
         if (value == 'logout') {
-          _firebaseService.signOut();
+          _supabaseService.signOut();
         }
       },
               itemBuilder: (BuildContext context) {

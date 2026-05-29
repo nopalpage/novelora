@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import '../services/firebase_service.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import '../services/supabase_service.dart';
 import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -13,7 +13,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _firebaseService = FirebaseService();
+  final _supabaseService = SupabaseService();
   bool _isLoading = false;
 
   Future<void> _login() async {
@@ -27,17 +27,17 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _isLoading = true);
 
     try {
-      await _firebaseService.signIn(
+      await _supabaseService.signIn(
         _emailController.text.trim(),
         _passwordController.text.trim(),
       );
       if (mounted) {
         Navigator.pop(context); // Go back to home
       }
-    } on FirebaseAuthException catch (e) {
+    } on AuthException catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message ?? 'Authentication error')),
+          SnackBar(content: Text(e.message)),
         );
       }
     } catch (e) {

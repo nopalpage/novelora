@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/novel.dart';
 import '../models/chapter.dart';
 import '../services/supabase_service.dart';
+import '../services/local_storage_service.dart';
 import 'chapter_read_screen.dart';
 
 class NovelDetailScreen extends StatefulWidget {
@@ -24,18 +25,38 @@ class _NovelDetailScreenState extends State<NovelDetailScreen> {
     _fetchChapters();
   }
 
+  final _localStorage = LocalStorageService();
+
   Future<void> _fetchChapters() async {
     try {
+      // 1. Try to load from cache
+      final cachedChapters = await _localStorage.getNovelChapters(widget.novel.id);
+      if (cachedChapters != null && cachedChapters.isNotEmpty) {
+        setState(() {
+          _chapters = cachedChapters;
+          _isLoading = false;
+        });
+      }
+
+      // 2. Fetch fresh data
       final chapters = await _supabaseService.getNovelChapters(widget.novel.id);
-      setState(() {
-        _chapters = chapters;
-        _isLoading = false;
-      });
+      
+      // 3. Save to local storage
+      await _localStorage.saveNovelChapters(widget.novel.id, chapters);
+
+      if (mounted) {
+        setState(() {
+          _chapters = chapters;
+          _isLoading = false;
+        });
+      }
     } catch (e) {
       debugPrint('Error fetching chapters: $e');
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 

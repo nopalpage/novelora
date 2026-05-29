@@ -78,8 +78,8 @@ export default function App() {
             <Route path="/search" element={<Search />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/profile/:userId" element={<Profile />} />
-            <Route path="/novel/:novelId" element={<NovelDetail />} />
-            <Route path="/novel/:novelId/chapter/:chapterId" element={<Chapter />} />
+            <Route path="/:type/:novelSlug" element={<NovelDetail />} />
+            <Route path="/:type/:novelSlug/chapter-:chapterNum" element={<Chapter />} />
             <Route path="/category/:categoryId" element={<Category />} />
             <Route path="/genre" element={<Genre />} />
             <Route path="/tags" element={<Tags />} />

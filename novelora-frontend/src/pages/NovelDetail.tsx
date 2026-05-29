@@ -6,23 +6,23 @@ import { AdsterraBanner, AdsterraNativeBanner } from "../components/AdsterraAd";
 import { NovelComments } from "../components/NovelComments";
 import { SidebarChat, SidebarLastRead } from "../components/SidebarWidgets";
 import { useLanguage } from "../contexts/LanguageContext";
-import { api } from "../lib/api";
+import { api, getNovelUrl, getChapterUrl } from "../lib/api";
 
 export function NovelDetail() {
   const { language, t } = useLanguage();
-  const { novelId } = useParams();
+  const { novelSlug } = useParams();
   const [novel, setNovel] = useState<Novel | null>(null);
   const [apiChapters, setApiChapters] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!novelId) return;
+    if (!novelSlug) return;
     let isMounted = true;
     setIsLoading(true);
 
     Promise.all([
-      api.getNovelById(novelId),
-      api.getChapters(novelId)
+      api.getNovelById(novelSlug),
+      api.getChapters(novelSlug)
     ]).then(([fetchedNovel, fetchedChapters]) => {
       if (isMounted) {
         setNovel(fetchedNovel);
@@ -35,7 +35,7 @@ export function NovelDetail() {
     });
 
     return () => { isMounted = false; };
-  }, [novelId]);
+  }, [novelSlug]);
 
   const author = novel?.author || "Unknown Author";
   const status = novel?.status || "Ongoing";
@@ -289,7 +289,7 @@ export function NovelDetail() {
                   const translationDesc = translationType === "HTL" ? t("detail.humanTranslation") : t("detail.machineTranslation");
 
                   return (
-                    <Link key={i} to={`/novel/${novel.id}/chapter/${id}`} className="flex items-center justify-between p-3 bg-gray-100 dark:bg-gray-800/40 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800/60 transition-colors group">
+                    <Link key={i} to={getChapterUrl(novel, chapterNum)} className="flex items-center justify-between p-3 bg-gray-100 dark:bg-gray-800/40 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800/60 transition-colors group">
                       <div className="flex items-start gap-4">
                         <div className="shrink-0 w-10 h-10 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded flex items-center justify-center text-gray-500 dark:text-gray-400">
                           <BookOpen size={20} strokeWidth={1.5} />
@@ -348,7 +348,7 @@ export function NovelDetail() {
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 border-b border-gray-100 dark:border-gray-800 pb-2">{t("detail.relatedWorks")}</h3>
                 <div className="space-y-4">
                   {novel.relatedWorks.map((work) => (
-                    <Link key={work.id} to={`/novel/${work.id}`} className="flex gap-3 group">
+                    <Link key={work.id} to={getNovelUrl(work)} className="flex gap-3 group">
                       <div className="w-[48px] h-[64px] shrink-0 rounded overflow-hidden shadow-sm">
                         <img src={work.image} alt={work.title} onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = "/novelora-fallback.svg"; }} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                       </div>

@@ -1,6 +1,7 @@
 import { Novel } from "../data";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
+import { getNovelUrl } from "../lib/api";
 
 export function PopularNovelSkeleton() {
   return (
@@ -35,7 +36,7 @@ export function LatestUpdateSkeleton() {
 
 export function PopularNovelCard({ novel }: { novel: Novel }) {
   return (
-    <Link to={`/novel/${novel.id}`} className="relative group block rounded-xl overflow-hidden bg-white dark:bg-[#1e2330] shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ring-1 ring-black/5 dark:ring-white/5 flex flex-col h-full">
+    <Link to={getNovelUrl(novel)} className="relative group block rounded-xl overflow-hidden bg-white dark:bg-[#1e2330] shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ring-1 ring-black/5 dark:ring-white/5 flex flex-col h-full">
       <div className="aspect-[2/3] overflow-hidden relative rounded-t-xl">
         <img 
           src={novel.image} 
@@ -72,7 +73,7 @@ export function LatestUpdateCard({ novel }: { novel: Novel }) {
   const chapterText = novel.latestChapter?.replace(` ${t("detail.langId")}`, "") || "Chapter XX";
   
   return (
-    <Link to={`/novel/${novel.id}`} className="group relative flex gap-4 p-4 rounded-xl bg-white dark:bg-[#1a1b26] hover:bg-blue-50/50 dark:hover:bg-gray-800/60 transition-all duration-300 border border-gray-100 dark:border-gray-800/80 hover:border-blue-200 dark:hover:border-gray-700 hover:shadow-md overflow-hidden">
+    <Link to={getNovelUrl(novel)} className="group relative flex gap-4 p-4 rounded-xl bg-white dark:bg-[#1a1b26] hover:bg-blue-50/50 dark:hover:bg-gray-800/60 transition-all duration-300 border border-gray-100 dark:border-gray-800/80 hover:border-blue-200 dark:hover:border-gray-700 hover:shadow-md overflow-hidden">
       {/* Subtle decorative gradient on hover */}
       <div className="absolute inset-0 bg-gradient-to-r from-blue-50/50 to-transparent dark:from-blue-900/10 dark:to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
 

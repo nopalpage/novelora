@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/chapter.dart';
 import '../services/supabase_service.dart';
+import '../services/local_storage_service.dart';
 
 class ChapterReadScreen extends StatefulWidget {
   final String chapterId;
@@ -22,18 +23,38 @@ class _ChapterReadScreenState extends State<ChapterReadScreen> {
     _fetchContent();
   }
 
+  final _localStorage = LocalStorageService();
+
   Future<void> _fetchContent() async {
     try {
+      // 1. Try to load from cache
+      final cachedChapter = await _localStorage.getChapterContent(widget.chapterId);
+      if (cachedChapter != null) {
+        setState(() {
+          _chapter = cachedChapter;
+          _isLoading = false;
+        });
+      }
+
+      // 2. Fetch fresh data
       final chapter = await _supabaseService.getChapterContent(widget.chapterId);
-      setState(() {
-        _chapter = chapter;
-        _isLoading = false;
-      });
+      
+      // 3. Save to local storage
+      await _localStorage.saveChapterContent(widget.chapterId, chapter);
+
+      if (mounted) {
+        setState(() {
+          _chapter = chapter;
+          _isLoading = false;
+        });
+      }
     } catch (e) {
       debugPrint('Error fetching chapter: $e');
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 

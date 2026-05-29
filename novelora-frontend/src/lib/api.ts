@@ -40,7 +40,9 @@ const fetch = async (url: RequestInfo | URL, options: RequestInit = {}) => {
 export function mapBackendNovel(backendNovel: any): Novel {
   return {
     id: backendNovel.id,
+    slug: backendNovel.slug,
     title: backendNovel.title,
+    type: backendNovel.type || (backendNovel.origin === 'KR' || backendNovel.origin === 'CN' ? 'Web Novel' : 'Light Novel'),
     image: backendNovel.image || backendNovel.cover_url || 'https://images.unsplash.com/photo-1618331835717-801e976710b2?q=80&w=400&auto=format&fit=crop',
     origin: backendNovel.origin,
     status: backendNovel.status,
@@ -53,6 +55,18 @@ export function mapBackendNovel(backendNovel: any): Novel {
     rank: backendNovel.views !== undefined ? Math.floor(backendNovel.views) : (backendNovel.total_views ? Math.floor(backendNovel.total_views) : undefined),
   };
 }
+
+export const getNovelUrl = (novel: any) => {
+  const typeStr = novel.type === 'Light Novel' ? 'ln' : 'wn';
+  const slug = novel.slug || novel.id;
+  return `/${typeStr}/${slug}`;
+};
+
+export const getChapterUrl = (novel: any, chapterNum: number) => {
+  const typeStr = novel.type === 'Light Novel' ? 'ln' : 'wn';
+  const slug = novel.slug || novel.id;
+  return `/${typeStr}/${slug}/chapter-${chapterNum}`;
+};
 
 export const api = {
   getNovels: async (params?: { sort?: string; limit?: number; page?: number; origin?: string; status?: string; _t?: number }): Promise<Novel[]> => {
@@ -161,6 +175,8 @@ export const api = {
           latestChapter: ch.title || `Chapter ${ch.chapter_num}`,
           timeAgo: timeAgoStr,
           origin: ch.novels?.origin,
+          type: ch.novels?.type,
+          slug: ch.novels?.slug,
         };
       });
       
@@ -179,6 +195,18 @@ export const api = {
       return data.data || null;
     } catch (error) {
       console.error('getChapterContent error:', error);
+      return null;
+    }
+  },
+  
+  getChapterContentBySlug: async (slug: string, chapterNum: number): Promise<any> => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/novels/${slug}/chapters/${chapterNum}`);
+      if (!res.ok) throw new Error('Failed to fetch chapter content');
+      const data = await res.json();
+      return data.data || null;
+    } catch (error) {
+      console.error('getChapterContentBySlug error:', error);
       return null;
     }
   },

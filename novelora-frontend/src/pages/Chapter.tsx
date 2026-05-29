@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { AdsterraBanner } from "../components/AdsterraAd";
 import { NovelComments } from "../components/NovelComments";
 import { useLanguage } from "../contexts/LanguageContext";
-import { api } from "../lib/api";
+import { api, getNovelUrl, getChapterUrl } from "../lib/api";
 
 const chapterTranslations = {
   en: [
@@ -42,11 +42,11 @@ const chapterTranslations = {
 
 export function Chapter() {
   const { language, t } = useLanguage();
-  const { novelId, chapterId } = useParams();
+  const { type, novelSlug, chapterNum } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [novel, setNovel] = useState<Novel | null>(null);
   const [chapterData, setChapterData] = useState<any>(null);
-  const [adjacentChapters, setAdjacentChapters] = useState<{prev: string | null, next: string | null}>({prev: null, next: null});
+  const [adjacentChapters, setAdjacentChapters] = useState<{prev: number | null, next: number | null}>({prev: null, next: null});
   
   // Reading settings
   const [fontSize, setFontSize] = useState("text-lg");
@@ -54,15 +54,17 @@ export function Chapter() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (!novelId || !chapterId) return;
+    if (!novelSlug || !chapterNum) return;
     
     let isMounted = true;
     setIsLoading(true);
     
+    const chapterNumber = parseInt(chapterNum, 10);
+    
     Promise.all([
-      api.getNovelById(novelId),
-      api.getChapterContent(chapterId),
-      api.getChapters(novelId)
+      api.getNovelById(novelSlug),
+      api.getChapterContentBySlug(novelSlug, chapterNumber),
+      api.getChapters(novelSlug)
     ]).then(([fetchedNovel, fetchedChapter, chapters]) => {
       if (isMounted) {
         setNovel(fetchedNovel);
@@ -71,10 +73,10 @@ export function Chapter() {
         // Find adjacent chapters
         if (chapters && chapters.length > 0 && fetchedChapter) {
           const sorted = [...chapters].sort((a, b) => a.chapter_num - b.chapter_num);
-          const currentIndex = sorted.findIndex(c => c.id === chapterId);
+          const currentIndex = sorted.findIndex(c => c.chapter_num === chapterNumber);
           setAdjacentChapters({
-            prev: currentIndex > 0 ? sorted[currentIndex - 1].id : null,
-            next: currentIndex < sorted.length - 1 && currentIndex !== -1 ? sorted[currentIndex + 1].id : null
+            prev: currentIndex > 0 ? sorted[currentIndex - 1].chapter_num : null,
+            next: currentIndex < sorted.length - 1 && currentIndex !== -1 ? sorted[currentIndex + 1].chapter_num : null
           });
         }
         
@@ -84,11 +86,11 @@ export function Chapter() {
             const historyRaw = localStorage.getItem("readingHistory");
             let history = historyRaw ? JSON.parse(historyRaw) : [];
             
-            history = history.filter((item: any) => item.novelId !== novelId);
+            history = history.filter((item: any) => item.novelId !== fetchedNovel.id);
             history.unshift({
-              novelId,
-              chapterId,
-              chapterNum: fetchedChapter?.chapter_num || chapterId,
+              novelId: fetchedNovel.id,
+              chapterId: fetchedChapter?.id,
+              chapterNum: fetchedChapter?.chapter_num || chapterNumber,
               novelTitle: fetchedNovel.title,
               novelImage: fetchedNovel.image,
               readAt: new Date().toISOString()
@@ -109,7 +111,7 @@ export function Chapter() {
     });
     
     return () => { isMounted = false; };
-  }, [novelId, chapterId]);
+  }, [novelSlug, chapterNum]);
 
   if (isLoading) {
     return (
@@ -140,7 +142,7 @@ export function Chapter() {
     ? chapterData.content.split('\n').filter((p: string) => p.trim().length > 0)
     : chapterTranslations[language] || chapterTranslations.en;
   
-  const displayChapterNum = chapterData?.chapter_num || chapterId;
+  const displayChapterNum = chapterData?.chapter_num || chapterNum;
 
   return (
     <div className="flex-grow w-full bg-gray-50 dark:bg-[#111216] min-h-screen">
@@ -164,14 +166,14 @@ export function Chapter() {
         {/* Header / Navigation */}
         <div className="bg-white dark:bg-[#1a1b26] rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-4 mb-6 sticky top-20 z-30 transition-all">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <Link to={`/novel/${novel.id}`} className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors w-full sm:w-auto">
+            <Link to={getNovelUrl(novel)} className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors w-full sm:w-auto">
               <ChevronLeft size={20} />
               <span className="font-medium truncate max-w-[200px]">{novel.title}</span>
             </Link>
             
             <div className="flex items-center justify-center gap-2 w-full sm:w-auto">
-              {prevChapter ? (
-                <Link to={`/novel/${novel.id}/chapter/${prevChapter}`} className="p-2 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+              {prevChapter !== null ? (
+                <Link to={getChapterUrl(novel, prevChapter)} className="p-2 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
                   <ChevronLeft size={20} className="text-gray-600 dark:text-gray-400" />
                 </Link>
               ) : (
@@ -184,8 +186,8 @@ export function Chapter() {
                 {t("home.chapters")} {displayChapterNum}
               </div>
               
-              {nextChapter ? (
-                <Link to={`/novel/${novel.id}/chapter/${nextChapter}`} className="p-2 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+              {nextChapter !== null ? (
+                <Link to={getChapterUrl(novel, nextChapter)} className="p-2 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
                   <ChevronRight size={20} className="text-gray-600 dark:text-gray-400" />
                 </Link>
               ) : (
@@ -239,8 +241,8 @@ export function Chapter() {
 
         {/* Bottom Navigation */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white dark:bg-[#1a1b26] rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-4 mb-8">
-           {prevChapter ? (
-              <Link to={`/novel/${novel.id}/chapter/${prevChapter}`} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-xl transition-colors font-medium">
+           {prevChapter !== null ? (
+              <Link to={getChapterUrl(novel, prevChapter)} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-xl transition-colors font-medium">
                 <ChevronLeft size={20} />
                 {t("chapter.prev")}
               </Link>
@@ -251,13 +253,13 @@ export function Chapter() {
               </button>
             )}
             
-            <Link to={`/novel/${novel.id}`} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-xl transition-colors font-medium">
+            <Link to={getNovelUrl(novel)} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-xl transition-colors font-medium">
               <BookOpen size={20} />
               {t("chapter.index")}
             </Link>
             
-            {nextChapter ? (
-              <Link to={`/novel/${novel.id}/chapter/${nextChapter}`} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-colors font-medium shadow-sm shadow-blue-500/20">
+            {nextChapter !== null ? (
+              <Link to={getChapterUrl(novel, nextChapter)} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-colors font-medium shadow-sm shadow-blue-500/20">
                 {t("chapter.next")}
                 <ChevronRight size={20} />
               </Link>

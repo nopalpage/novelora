@@ -4,7 +4,7 @@ import { PopularNovelSkeleton } from "../components/NovelCards";
 import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
-import { api } from "../lib/api";
+import { api, getNovelUrl } from "../lib/api";
 
 export function Profile() {
   const { userId } = useParams();
@@ -264,7 +264,7 @@ export function Profile() {
                 ) : bookmarkedNovels.length > 0 ? (
                   <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
                     {bookmarkedNovels.map((novel) => (
-                      <Link key={novel.id} to={`/novel/${novel.id}`} className="group relative rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-800/80 hover:-translate-y-1">
+                      <Link key={novel.id} to={getNovelUrl(novel)} className="group relative rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-800/80 hover:-translate-y-1">
                         <div className="aspect-[3/4] relative overflow-hidden bg-gray-200 dark:bg-gray-700">
                           <img 
                             src={novel.image} 

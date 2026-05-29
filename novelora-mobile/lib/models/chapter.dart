@@ -19,7 +19,7 @@ class Chapter {
     return Chapter(
       id: json['id'] as String? ?? '',
       novelId: json['novel_id'] as String? ?? '',
-      chapterNumber: (json['chapter_number'] as num?)?.toDouble() ?? 0.0,
+      chapterNumber: (json['chapter_num'] as num?)?.toDouble() ?? 0.0,
       title: json['title'] as String? ?? 'Unknown Title',
       content: json['content'] as String? ?? '',
       createdAt: json['created_at'] != null 

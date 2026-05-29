@@ -1,5 +1,6 @@
 export interface Novel {
   id: string;
+  slug?: string;
   title: string;
   image: string;
   rank?: number;

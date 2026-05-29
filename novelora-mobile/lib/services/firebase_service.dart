@@ -61,7 +61,7 @@ class FirebaseService {
     final querySnapshot = await _firestore
         .collection('chapters')
         .where('novel_id', isEqualTo: novelId)
-        .orderBy('chapter_number', descending: false)
+        .orderBy('chapter_num', descending: false)
         .get();
         
     return querySnapshot.docs.map((doc) {
