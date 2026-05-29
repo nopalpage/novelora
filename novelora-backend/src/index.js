@@ -260,7 +260,6 @@ app.post("/novels", requireAdmin, async (c) => {
   const supabase = db(c);
   if (!supabase) return ok(c, { ...body, id: Date.now() });
   const novelData = {
-    id: body.id && !body.id.toString().startsWith("custom-") ? body.id : `novel-${Date.now()}`,
     title: body.title,
     author: body.author || "Unknown",
     cover_url: body.image || body.cover_url,
@@ -269,10 +268,8 @@ app.post("/novels", requireAdmin, async (c) => {
     status: body.status || "Ongoing",
     tags: body.tags || [],
     genres: body.genres || [],
-    rating: body.rating || 0,
-    views: body.views || 0,
-    latest_chapter: body.latestChapter || body.latest_chapter || null,
-    time_ago: body.timeAgo || body.time_ago || null
+    avg_rating: body.rating || 0,
+    total_views: body.views || 0
   };
   const { data, error } = await supabase.from("novels").insert(novelData).select().single();
   if (error) return err(c, error.message);
@@ -293,10 +290,8 @@ app.put("/novels/:id", requireAdmin, async (c) => {
     status: body.status,
     tags: body.tags,
     genres: body.genres,
-    rating: body.rating,
-    views: body.views,
-    latest_chapter: body.latestChapter || body.latest_chapter,
-    time_ago: body.timeAgo || body.time_ago,
+    avg_rating: body.rating,
+    total_views: body.views,
     updated_at: new Date()
   };
   Object.keys(novelData).forEach(key => novelData[key] === undefined && delete novelData[key]);
@@ -324,10 +319,10 @@ app.get("/novels/:id/chapters", cache({ cacheName: "chapters", cacheControl: "ma
   const supabase = db(c);
   if (!supabase) return ok(c, []);
   const { data, error } = await supabase.from("chapters")
-    .select("id,chapter_number,title,created_at")
-    .eq("novel_id", c.req.param("id")).order("chapter_number", { ascending: true });
+    .select("id,chapter_num,title,created_at")
+    .eq("novel_id", c.req.param("id")).order("chapter_num", { ascending: true });
   if (error) return err(c, error.message, 500);
-  const mapped = (data || []).map(ch => ({ ...ch, chapter_num: ch.chapter_number, translation_type: "HTL" }));
+  const mapped = (data || []).map(ch => ({ ...ch, translation_type: "HTL" }));
   return ok(c, mapped);
 });
 
@@ -339,11 +334,11 @@ app.get("/chapters/latest", async (c) => {
   const limit = parseInt(c.req.query("limit") || "10");
   
   const { data, count } = await supabase.from("chapters")
-    .select("id,chapter_number,title,created_at,novel_id,novels(title,cover_url,origin)", { count: "exact" })
+    .select("id,chapter_num,title,created_at,novel_id,novels(title,cover_url,origin)", { count: "exact" })
     .order("created_at", { ascending: false })
     .range((page - 1) * limit, page * limit - 1);
     
-  const mapped = (data || []).map(ch => ({ ...ch, chapter_num: ch.chapter_number }));
+  const mapped = data || [];
   return ok(c, { chapters: mapped, total: count || 0 });
 });
 
@@ -351,11 +346,11 @@ app.get("/chapters/:id", cache({ cacheName: "chapter-content", cacheControl: "ma
   const supabase = db(c);
   if (!supabase) return err(c, "Not found", 404);
   const { data, error } = await supabase.from("chapters")
-    .select("id,novel_id,chapter_number,title,content,created_at")
+    .select("id,novel_id,chapter_num,title,content,created_at")
     .eq("id", c.req.param("id")).single();
   if (error) return err(c, "Not found", 404);
   c.executionCtx?.waitUntil(supabase.rpc("increment_chapter_views", { chapter_id: c.req.param("id") }));
-  return ok(c, { ...data, chapter_num: data.chapter_number, translation_type: "HTL" });
+  return ok(c, { ...data, translation_type: "HTL" });
 });
 
 app.post("/chapters", requireAdmin, async (c) => {
@@ -363,16 +358,15 @@ app.post("/chapters", requireAdmin, async (c) => {
   const supabase = db(c);
   if (!supabase) return ok(c, { ...body, id: Date.now() });
   const insertData = {
-    id: body.id || `chapter-${Date.now()}`,
     novel_id: body.novel_id,
-    chapter_number: body.chapter_num,
+    chapter_num: body.chapter_num,
     title: body.title,
     content: body.content
   };
   const { data, error } = await supabase.from("chapters").insert(insertData).select().single();
   if (error) return err(c, error.message);
-  c.executionCtx?.waitUntil(logActivity(c, supabase, "Add Chapter", `Added chapter ${data.chapter_number} to novel ${data.novel_id}`));
-  return ok(c, { ...data, chapter_num: data.chapter_number });
+  c.executionCtx?.waitUntil(logActivity(c, supabase, "Add Chapter", `Added chapter ${data.chapter_num} to novel ${data.novel_id}`));
+  return ok(c, data);
 });
 
 app.put("/chapters/:id", requireAdmin, async (c) => {
@@ -380,15 +374,15 @@ app.put("/chapters/:id", requireAdmin, async (c) => {
   const supabase = db(c);
   if (!supabase) return ok(c, body);
   const updateData = {
-    chapter_number: body.chapter_num,
+    chapter_num: body.chapter_num,
     title: body.title,
     content: body.content
   };
   Object.keys(updateData).forEach(key => updateData[key] === undefined && delete updateData[key]);
   const { data, error } = await supabase.from("chapters").update(updateData).eq("id", c.req.param("id")).select().single();
   if (error) return err(c, error.message);
-  c.executionCtx?.waitUntil(logActivity(c, supabase, "Edit Chapter", `Updated chapter ${data.chapter_number} of novel ${data.novel_id}`));
-  return ok(c, { ...data, chapter_num: data.chapter_number });
+  c.executionCtx?.waitUntil(logActivity(c, supabase, "Edit Chapter", `Updated chapter ${data.chapter_num} of novel ${data.novel_id}`));
+  return ok(c, data);
 });
 
 app.delete("/chapters/:id", requireAdmin, async (c) => {
