@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "769073984988",
+    "project_id": "novelora-project",
+    "storage_bucket": "novelora-project.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:769073984988:android:87a0f052db2caf11a40b19",
+        "android_client_info": {
+          "package_name": "com.novelora.app.novelora_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGKuqg8PERiQHPn3I7k1-VLmDwH7vwBN0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -33,7 +33,7 @@ export function Home() {
     setIsLoading(true);
 
     Promise.all([
-      api.getNovels({ sort: 'popular', limit: 12 }), // You might want to use popularTab to determine origin or genre
+      api.getNovels({ sort: 'popular', limit: 12, _t: Date.now() }), // Bypassing cache to see immediate updates
       api.getLatestChapters(currentPage, itemsPerPage)
     ]).then(([novels, latestData]) => {
       if (isMounted) {
@@ -93,6 +93,10 @@ export function Home() {
                 <PopularNovelSkeleton key={i} />
               ))}
             </div>
+          ) : displayNovels.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-12 text-center bg-gray-50 dark:bg-gray-800/20 rounded-xl border border-dashed border-gray-200 dark:border-gray-800">
+              <p className="text-gray-500 dark:text-gray-400">Belum ada novel populer saat ini.</p>
+            </div>
           ) : (
             <motion.div 
               className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 sm:gap-6"
@@ -136,6 +140,11 @@ export function Home() {
                 {Array.from({ length: 12 }).map((_, i) => (
                   <LatestUpdateSkeleton key={i} />
                 ))}
+              </div>
+            ) : latestUpdates.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-16 text-center border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-xl">
+                <p className="text-gray-500 dark:text-gray-400 font-medium">Belum ada pembaruan chapter terbaru.</p>
+                <p className="text-gray-400 dark:text-gray-500 text-sm mt-1">Novel yang baru dibuat belum memiliki chapter.</p>
               </div>
             ) : (
               <motion.div 
