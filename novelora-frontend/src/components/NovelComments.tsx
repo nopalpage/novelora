@@ -16,35 +16,12 @@ interface Comment {
   likes: number;
 }
 
-const DUMMY_COMMENTS: Comment[] = [
-  {
-    id: "c1",
-    userId: "u1",
-    userName: "Reva_23",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Reva",
-    text: "This novel is absolutely amazing! The world building is top notch. Can't wait for the next chapter.",
-    createdAt: "2 days ago",
-    timestamp: Date.now() - 2 * 24 * 60 * 60 * 1000,
-    likes: 15
-  },
-  {
-    id: "c2",
-    userId: "u2",
-    userName: "ShadowReader",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Shadow",
-    text: "The pacing is a bit slow in the beginning, but it gets really good after chapter 50.",
-    createdAt: "1 week ago",
-    timestamp: Date.now() - 7 * 24 * 60 * 60 * 1000,
-    likes: 8
-  }
-];
-
 type SortOption = "Newest" | "Oldest" | "Most Liked" | "Least Liked";
 
 export function NovelComments() {
   const { t } = useLanguage();
   const { isLoggedIn, user, login } = useAuth();
-  const [comments, setComments] = useState<Comment[]>(DUMMY_COMMENTS);
+  const [comments, setComments] = useState<Comment[]>([]);
   const [activeDropdownId, setActiveDropdownId] = useState<string | null>(null);
   const [reportModal, setReportModal] = useState<{ isOpen: boolean; commentId: string | null }>({ isOpen: false, commentId: null });
   const [reportReason, setReportReason] = useState("Spam");

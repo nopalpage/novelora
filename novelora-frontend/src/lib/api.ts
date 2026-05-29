@@ -58,13 +58,13 @@ export function mapBackendNovel(backendNovel: any): Novel {
 
 export const getNovelUrl = (novel: any) => {
   const typeStr = novel.type === 'Light Novel' ? 'ln' : 'wn';
-  const slug = novel.slug || novel.id;
+  const slug = novel.slug || (novel.title ? novel.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '') : novel.id);
   return `/${typeStr}/${slug}`;
 };
 
 export const getChapterUrl = (novel: any, chapterNum: number) => {
   const typeStr = novel.type === 'Light Novel' ? 'ln' : 'wn';
-  const slug = novel.slug || novel.id;
+  const slug = novel.slug || (novel.title ? novel.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '') : novel.id);
   return `/${typeStr}/${slug}/chapter-${chapterNum}`;
 };
 

@@ -79,7 +79,7 @@ export default function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/profile/:userId" element={<Profile />} />
             <Route path="/:type/:novelSlug" element={<NovelDetail />} />
-            <Route path="/:type/:novelSlug/chapter-:chapterNum" element={<Chapter />} />
+            <Route path="/:type/:novelSlug/:chapterStr" element={<Chapter />} />
             <Route path="/category/:categoryId" element={<Category />} />
             <Route path="/genre" element={<Genre />} />
             <Route path="/tags" element={<Tags />} />

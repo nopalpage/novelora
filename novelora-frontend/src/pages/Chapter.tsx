@@ -42,7 +42,8 @@ const chapterTranslations = {
 
 export function Chapter() {
   const { language, t } = useLanguage();
-  const { type, novelSlug, chapterNum } = useParams();
+  const { type, novelSlug, chapterStr } = useParams();
+  const chapterNum = chapterStr?.replace('chapter-', '');
   const [isLoading, setIsLoading] = useState(true);
   const [novel, setNovel] = useState<Novel | null>(null);
   const [chapterData, setChapterData] = useState<any>(null);
